@@ -12,112 +12,139 @@
             background-color: #0f172a;
             color: #e2e8f0;
         }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1rem;
+        .main-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 256px;
+            background-color: #1e293b;
+            padding: 1.5rem;
+            border-right: 2px solid #334155;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            flex-shrink: 0; /* Prevents the sidebar from shrinking */
+        }
+        .sidebar-button {
+            width: 100%;
+            text-align: left;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            color: #94a3b8;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .sidebar-button:hover, .sidebar-button.active {
+            color: #e2e8f0;
+            background-color: #0ea5e9;
+        }
+        .content-area {
+            flex-grow: 1;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
         }
         .card {
             background-color: #1e293b;
-            border-radius: 1.5rem;
-            padding: 2rem;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             transition: transform 0.2s ease-in-out;
         }
         .card:hover {
             transform: translateY(-5px);
         }
-        #header {
-            background-color: #1e293b;
-            padding: 1rem;
-            border-bottom: 2px solid #334155;
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200 min-h-screen flex flex-col">
+<body class="bg-gray-900 text-gray-200">
 
-    <!-- Header -->
-    <header id="header" class="flex items-center justify-between px-8 py-4 sticky top-0 z-10">
-        <div class="flex items-center">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPUjmt_X_yRY2FhAHToeCDmsn-YbAchcD288349bDVnIk9B9tz8qgcmJg&s" alt="Delta 6 Logo" class="w-12 h-12 mr-4">
-            <h1 class="text-2xl font-bold">Welcome, admin</h1>
-        </div>
-        <button id="logout-button" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-xl transition-colors duration-200">
-            Logout
-        </button>
-    </header>
+    <div class="main-container">
 
-    <!-- Main Content & Sidebar Container -->
-    <div class="container mx-auto p-4 flex-grow flex flex-col lg:flex-row gap-8">
-        <!-- Sidebar Navigation -->
-        <aside class="lg:w-1/4">
-            <div class="card p-6 flex flex-col gap-4 sticky top-20">
-                <h2 class="text-xl font-bold mb-2">Topics</h2>
-                <div id="nav-links" class="flex flex-col gap-2">
-                    <button data-path="home" class="nav-button bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-4 rounded-xl transition-colors duration-200">
-                        Home
-                    </button>
-                    <button data-path="sql-injection" class="nav-button bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-xl transition-colors duration-200">
-                        SQL Injection
-                    </button>
-                    <button data-path="xss" class="nav-button bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-xl transition-colors duration-200">
-                        XSS
-                    </button>
-                    <button data-path="open-redirect" class="nav-button bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-xl transition-colors duration-200">
-                        Open Redirect
-                    </button>
-                    <button data-path="subdomain-finder" class="nav-button bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-xl transition-colors duration-200">
-                        Subdomain Finder
-                    </button>
-                    <button data-path="assets-link-finder" class="nav-button bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-xl transition-colors duration-200">
-                        Assets Link Finder
-                    </button>
-                    <button data-path="ssti" class="nav-button bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-xl transition-colors duration-200">
-                        SSTI
-                    </button>
-                    <button data-path="csti" class="nav-button bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-xl transition-colors duration-200">
-                        CSTI
-                    </button>
-                </div>
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="flex items-center gap-2">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPUjmt_X_yRY2FhAHToeCDmsn-YbAchcD288349bDVnIk9B9tz8qgcmJg&s" alt="Delta 6 Logo" class="w-8 h-8">
+                <h1 class="text-2xl font-bold">Delta</h1>
             </div>
+            <nav class="flex flex-col gap-2" id="sidebar-nav">
+                <button class="sidebar-button active" data-path="dashboard-overview">Dashboard</button>
+                <div class="mt-4">
+                    <button id="learn-toggle" class="sidebar-button flex items-center justify-between" data-path="learn-overview">
+                        <h2 class="text-sm font-bold uppercase text-gray-400">Learn</h2>
+                        <span id="learn-icon">▼</span>
+                    </button>
+                    <div id="learn-sub-menu" class="flex flex-col gap-2 pl-4 mt-2 hidden">
+                        <button class="sidebar-button" data-path="xss">XSS Scanner</button>
+                        <button class="sidebar-button" data-path="sql-injection">SQLi Scanner</button>
+                        <button class="sidebar-button" data-path="open-redirect">Open Redirect</button>
+                        <button class="sidebar-button" data-path="subdomain-finder">Subdomain Finder</button>
+                        <button class="sidebar-button" data-path="assets-discovery">Asset Discovery</button>
+                        <button class="sidebar-button" data-path="reports">Reports</button>
+                    </div>
+                </div>
+            </nav>
         </aside>
 
         <!-- Main Content Area -->
-        <main class="lg:w-3/4 flex-grow flex flex-col">
-            <div id="content" class="card flex-grow flex flex-col">
-                <!-- Content will be injected here by JavaScript -->
+        <main class="content-area">
+            <header class="flex items-center justify-between mb-8 pb-4 border-b-2 border-slate-700">
+                <h1 class="text-2xl font-semibold text-white">Welcome, Admin</h1>
+                <button id="logout-button" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-xl transition-colors duration-200">
+                    Logout
+                </button>
+            </header>
+
+            <div id="dynamic-content">
+                <!-- Content will be rendered here -->
             </div>
         </main>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Check for login state
             const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
             if (!isLoggedIn) {
                 window.location.href = 'index.html';
                 return;
             }
 
-            const attacks = {
-                'home': {
-                    title: 'Welcome to the Security Guide',
-                    description: 'This is an educational tool for learning about common web security vulnerabilities and how to prevent them. This application does not perform any real-world actions.',
-                    content: `
-                        <p class="text-gray-400 mb-4">
-                            Select a topic from the navigation menu on the left to learn about its technical details, impact, and best practices for prevention.
-                        </p>
-                        <p class="text-gray-400">
-                            Understanding these concepts from a defensive perspective is the first step towards building secure and robust applications.
-                        </p>
-                        <div class="mt-8 flex justify-center">
-                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPUjmt_X_yRY2FhAHToeCDmsn-YbAchcD288349bDVnIk9B9tz8qgcmJg&s" alt="Delta 6 Logo" class="w-24 h-24">
-                        </div>
+            const dynamicContent = document.getElementById('dynamic-content');
+            const sidebarNav = document.getElementById('sidebar-nav');
+            const logoutButton = document.getElementById('logout-button');
+            const learnToggle = document.getElementById('learn-toggle');
+            const learnSubMenu = document.getElementById('learn-sub-menu');
+            const learnIcon = document.getElementById('learn-icon');
+
+            const pages = {
+                'dashboard-overview': {
+                    title: 'Dashboard Overview',
+                    isDashboard: true
+                },
+                'learn-overview': {
+                    title: 'Learn about Vulnerabilities',
+                    description: 'Here you will find an extensive guide to common web vulnerabilities. Each section provides a detailed explanation of how a specific bug works, its potential impact, and crucial prevention techniques to help you build more secure applications. Select a bug from the "Learn" menu to begin your journey.'
+                },
+                'xss': {
+                    title: 'XSS Scanner',
+                    description: 'A tool for detecting Cross-Site Scripting vulnerabilities. XSS is a vulnerability that allows an attacker to inject malicious scripts into web pages viewed by other users. This can be used to steal user session cookies, redirect users, or perform other malicious actions.',
+                    prevention: `
+                        <h4 class="text-xl font-bold mt-6 mb-2 text-white">Prevention</h4>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><b>Sanitize and escape</b> all untrusted data before inserting it into the HTML.</li>
+                            <li>Set the <b>HttpOnly</b> flag on session cookies to prevent them from being accessed by client-side scripts.</li>
+                            <li>Implement a strong <b>Content Security Policy (CSP)</b> to control which scripts can execute.</li>
+                        </ul>
                     `,
                 },
                 'sql-injection': {
-                    title: 'SQL Injection (SQLi)',
-                    description: 'A code injection technique used to attack data-driven applications, in which malicious SQL statements are inserted into an entry field for execution. An attacker can use this to bypass authentication, retrieve data, or even modify the database.',
+                    title: 'SQL Injection (SQLi) Scanner',
+                    description: 'Test parameters for SQL injection flaws. SQL injection is a code injection technique in which malicious SQL statements are inserted into an entry field for execution. An attacker can use this to bypass authentication, retrieve data, or even modify the database.',
                     prevention: `
                         <h4 class="text-xl font-bold mt-6 mb-2 text-white">Prevention</h4>
                         <ul class="list-disc list-inside space-y-2">
@@ -128,22 +155,9 @@
                         </ul>
                     `,
                 },
-                'xss': {
-                    title: 'Cross-Site Scripting (XSS)',
-                    description: 'A vulnerability that allows an attacker to inject malicious client-side scripts into web pages viewed by other users. This can be used to steal user session cookies, redirect users, or perform other malicious actions.',
-                    prevention: `
-                        <h4 class="text-xl font-bold mt-6 mb-2 text-white">Prevention</h4>
-                        <ul class="list-disc list-inside space-y-2">
-                            <li><b>Sanitize and escape</b> all untrusted data before inserting it into the HTML.</li>
-                            <li>Set the <b>HttpOnly</b> flag on session cookies to prevent them from being accessed by client-side scripts.</li>
-                            <li>Implement a strong <b>Content Security Policy (CSP)</b> to control which scripts can execute.</li>
-                            <li>Use an encoding library to handle data contextually.</li>
-                        </ul>
-                    `,
-                },
                 'open-redirect': {
                     title: 'Open Redirect',
-                    description: 'A vulnerability where a web application allows an attacker to manipulate parameters and redirect users to a malicious website. This is often used in phishing campaigns.',
+                    description: 'A tool to identify and verify open redirect issues. This is a vulnerability where a web application allows an attacker to manipulate parameters and redirect users to a malicious website. This is often used in phishing campaigns.',
                     prevention: `
                         <h4 class="text-xl font-bold mt-6 mb-2 text-white">Prevention</h4>
                         <ul class="list-disc list-inside space-y-2">
@@ -155,7 +169,7 @@
                 },
                 'subdomain-finder': {
                     title: 'Subdomain Finder',
-                    description: 'A tool used in security to discover all active subdomains associated with a main domain. This is a reconnaissance technique used to map out a target\'s attack surface and find other entry points.',
+                    description: 'A tool for enumerating subdomains and hidden assets. This is a reconnaissance technique used to map out a target\'s attack surface and find other entry points.',
                     prevention: `
                         <h4 class="text-xl font-bold mt-6 mb-2 text-white">Prevention</h4>
                         <p class="text-gray-400 mt-2">
@@ -163,9 +177,9 @@
                         </p>
                     `,
                 },
-                'assets-link-finder': {
-                    title: 'Assets Link Finder',
-                    description: 'A tool for discovering links to assets (e.g., JavaScript files, CSS files, images) on a website. Attackers use this to identify potential vulnerabilities in older scripts or to find hidden assets not visible to the user.',
+                'assets-discovery': {
+                    title: 'Asset Discovery',
+                    description: 'A tool for mapping application endpoints and directories. Attackers use this to identify potential vulnerabilities in older scripts or to find hidden assets not visible to the user.',
                     prevention: `
                         <h4 class="text-xl font-bold mt-6 mb-2 text-white">Prevention</h4>
                         <p class="text-gray-400 mt-2">
@@ -173,80 +187,109 @@
                         </p>
                     `,
                 },
-                'ssti': {
-                    title: 'Server-Side Template Injection (SSTI)',
-                    description: 'A vulnerability that occurs when user input is insecurely embedded into a server-side template, allowing an attacker to inject and execute arbitrary code on the server.',
+                'reports': {
+                    title: 'Reports',
+                    description: 'Generate detailed vulnerability reports. This is a placeholder for a future feature to summarize scan findings and provide actionable insights.',
                     prevention: `
-                        <h4 class="text-xl font-bold mt-6 mb-2 text-white">Prevention</h4>
-                        <ul class="list-disc list-inside space-y-2">
-                            <li>Avoid using templates for untrusted user input.</li>
-                            <li>Use a template engine with a sandbox or strict mode to limit the functions and objects that can be accessed.</li>
-                            <li>Sanitize user input before passing it to the template.</li>
-                        </ul>
-                        <div class="mt-8 flex justify-center">
-                            <img src="https://placehold.co/400x200/1e293b/a0a0a0?text=SSTI+Example+Diagram" class="rounded-lg shadow-md" alt="SSTI Example Diagram"/>
-                        </div>
-                    `,
-                },
-                'csti': {
-                    title: 'Client-Side Template Injection (CSTI)',
-                    description: 'Similar to SSTI, but the injection and execution of code happens in the browser. This occurs when an attacker can inject a malicious payload into a client-side template, potentially leading to XSS.',
-                    prevention: `
-                        <h4 class="text-xl font-bold mt-6 mb-2 text-white">Prevention</h4>
-                        <ul class="list-disc list-inside space-y-2">
-                            <li>Sanitize all user-provided data before it is rendered by the client-side template.</li>
-                            <li>Avoid using client-side template engines for rendering data directly from user input.</li>
-                            <li>Implement a strong Content Security Policy (CSP).</li>
-                        </ul>
+                        <h4 class="text-xl font-bold mt-6 mb-2 text-white">Status</h4>
+                        <p class="text-gray-400 mt-2">
+                            This feature is currently under development. Please check back later.
+                        </p>
                     `,
                 },
             };
 
+            const dashboardCards = [
+                { path: 'xss', title: 'XSS Scanner', description: 'Detect reflected and stored XSS vulnerabilities.' },
+                { path: 'sql-injection', title: 'SQL Injection', description: 'Test parameters for SQL injection flaws.' },
+                { path: 'open-redirect', title: 'Open Redirect', description: 'Identify and verify open redirect issues.' },
+                { path: 'subdomain-finder', title: 'Subdomain Finder', description: 'Enumerate subdomains and hidden assets.' },
+                { path: 'assets-discovery', title: 'Asset Discovery', description: 'Map application endpoints and directories.' },
+                { path: 'reports', title: 'Reports', description: 'Generate detailed vulnerability reports.' },
+            ];
+
             function renderContent(path) {
-                const contentDiv = document.getElementById('content');
-                const attack = attacks[path];
-
-                document.querySelectorAll('.nav-button').forEach(btn => {
-                    btn.classList.remove('bg-sky-600', 'hover:bg-sky-700');
-                    btn.classList.add('bg-gray-700', 'hover:bg-gray-600');
-                });
-
-                const activeBtn = document.querySelector(`[data-path="${path}"]`);
-                if (activeBtn) {
-                    activeBtn.classList.add('bg-sky-600', 'hover:bg-sky-700');
-                    activeBtn.classList.remove('bg-gray-700', 'hover:bg-gray-600');
+                const page = pages[path];
+                if (!page) {
+                    renderContent('dashboard-overview');
+                    return;
                 }
 
-                if (attack) {
-                    contentDiv.innerHTML = `
-                        <div class="flex-grow flex flex-col">
-                            <h2 class="text-3xl font-bold text-white mb-4">${attack.title}</h2>
-                            <p class="text-gray-400 mb-6">${attack.description}</p>
-                            <div class="flex-grow">
-                                ${attack.content || ''}
-                                ${attack.prevention || ''}
-                            </div>
+                if (page.isDashboard) {
+                    const cardsHtml = dashboardCards.map(card => `
+                        <div class="card cursor-pointer" data-path="${card.path}">
+                            <h3 class="text-lg font-semibold mb-2 text-white">${card.title}</h3>
+                            <p class="text-sm text-gray-400">${card.description}</p>
+                        </div>
+                    `).join('');
+                    dynamicContent.innerHTML = `
+                        <h2 class="text-xl font-bold mb-6">Dashboard Overview</h2>
+                        <div class="grid-container" id="dashboard-cards-container">
+                            ${cardsHtml}
                         </div>
                     `;
+                    // Attach event listeners for card redirection
+                    document.querySelectorAll('#dashboard-cards-container .card').forEach(card => {
+                        card.addEventListener('click', (e) => {
+                            const newPath = e.currentTarget.dataset.path;
+                            window.location.href = `/${newPath}/index.html`;
+                        });
+                    });
                 } else {
-                    renderContent('home');
+                    dynamicContent.innerHTML = `
+                        <div class="card">
+                            <h2 class="text-3xl font-bold text-white mb-4">${page.title}</h2>
+                            <p class="text-gray-400 mb-6">${page.description}</p>
+                            ${page.prevention || ''}
+                        </div>
+                    `;
                 }
             }
 
-            document.getElementById('logout-button').addEventListener('click', () => {
-                localStorage.removeItem('loggedIn');
-                window.location.href = 'index.html';
+            function updateActiveSidebarButton(path) {
+                document.querySelectorAll('.sidebar-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                const activeBtn = document.querySelector(`[data-path="${path}"]`);
+                if (activeBtn) {
+                    activeBtn.classList.add('active');
+                }
+            }
+            
+            // Toggle the 'Learn' sub-menu visibility
+            learnToggle.addEventListener('click', () => {
+                const isHidden = learnSubMenu.classList.toggle('hidden');
+                learnIcon.textContent = isHidden ? '▼' : '▲';
+                updateActiveSidebarButton('learn-overview');
+                renderContent('learn-overview');
             });
 
-            document.getElementById('nav-links').addEventListener('click', (e) => {
+            // Handle sidebar navigation clicks
+            sidebarNav.addEventListener('click', (e) => {
                 if (e.target.tagName === 'BUTTON') {
                     const path = e.target.dataset.path;
+                    updateActiveSidebarButton(path);
+
+                    if (path === 'dashboard-overview') {
+                         learnSubMenu.classList.add('hidden');
+                         learnIcon.textContent = '▼';
+                    } else if (path !== 'learn-overview') { // This is the key change
+                        learnSubMenu.classList.remove('hidden');
+                        learnIcon.textContent = '▲';
+                    }
+                    
                     renderContent(path);
                 }
             });
+
+            // Handle logout
+            logoutButton.addEventListener('click', () => {
+                localStorage.removeItem('loggedIn');
+                window.location.href = 'index.html';
+            });
             
-            // Render the initial content
-            renderContent('home');
+            // Initial render
+            renderContent('dashboard-overview');
         });
     </script>
 </body>
