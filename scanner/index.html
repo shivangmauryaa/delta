@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delta Login</title>
+  <style>
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #0a0f1e, #111827, #1e293b);
+      background-size: 300% 300%;
+      animation: gradientShift 12s ease infinite;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .login-container {
+      width: 380px;
+      padding: 40px;
+      border-radius: 20px;
+      backdrop-filter: blur(18px) saturate(180%);
+      -webkit-backdrop-filter: blur(18px) saturate(180%);
+      background: rgba(30, 41, 59, 0.9); /* darker glass effect */
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: center;
+      color: #fff;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      animation: fadeIn 1.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .login-container h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+      font-weight: 700;
+      color: #38bdf8;
+    }
+
+    .login-container p {
+      font-size: 0.9rem;
+      margin-bottom: 30px;
+      color: #cbd5e1;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .form-group label {
+      font-size: 0.85rem;
+      color: #e2e8f0;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      transition: 0.3s;
+    }
+
+    .form-group input:focus {
+      background: rgba(255,255,255,0.15);
+      box-shadow: 0 0 8px #38bdf8;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: bold;
+      background: linear-gradient(135deg, #0ea5e9, #2563eb);
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s ease-in-out;
+    }
+
+    .login-btn:hover {
+      background: linear-gradient(135deg, #2563eb, #0ea5e9);
+      transform: translateY(-2px);
+    }
+
+    .error-message {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: #f87171;
+      background: rgba(239, 68, 68, 0.15);
+      display: none;
+      text-align: center;
+    }
+
+    .footer-text {
+      margin-top: 25px;
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h1>Δ Delta</h1>
+    <p>Welcome to the Delta Security Portal</p>
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="Enter your username" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter your password" required>
+      </div>
+      <button type="submit" class="login-btn">Login</button>
+      <div id="error" class="error-message">❌ Invalid username or password</div>
+    </form>
+    <div class="footer-text">© 2025 Team Delta. All rights reserved.</div>
+  </div>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      const errorBox = document.getElementById("error");
+
+      // Demo credentials (replace with real auth later)
+      if (username === "admin" && password === "password") {
+        
+        // FIX: Set the session flags BEFORE redirecting
+        localStorage.setItem('loggedIn', 'true');
+        localStorage.setItem('userName', username);
+        
+        // Now redirect to the dashboard
+        window.location.href = "dashboard.html";
+        
+      } else {
+        errorBox.style.display = "block";
+      }
+    });
+  </script>
+</body>
+</html>
