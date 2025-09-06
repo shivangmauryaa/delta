@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delta 6 - Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at top left, #0f172a, #020617);
+      color: #e2e8f0;
+    }
+    .card {
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border-radius: 1.5rem;
+      padding: 2.5rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
+    }
+    .logo-glow {
+      filter: drop-shadow(0 0 10px #38bdf8);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center px-4">
+
+  <!-- Login Card -->
+  <div class="card max-w-md w-full">
+    <div class="flex flex-col items-center mb-6 text-center">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPUjmt_X_yRY2FhAHToeCDmsn-YbAchcD288349bDVnIk9B9tz8qgcmJg&s" class="w-24 h-24 mb-4 logo-glow">
+      <h1 class="text-3xl font-bold text-sky-400">DELTA 6</h1>
+      <p class="text-gray-400 mt-2 text-lg tracking-wide">Vulnerability Scanner Dashboard</p>
+    </div>
+
+    <form id="login-form" class="space-y-4">
+      <input type="text" id="username" placeholder="Username" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-sky-500 text-white" required>
+      <input type="password" id="password" placeholder="Password" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-sky-500 text-white" required>
+      <button type="submit" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-semibold py-3 rounded-lg transition transform hover:scale-105 duration-200">
+        Login
+      </button>
+    </form>
+
+    <p id="error-msg" class="text-red-500 text-center mt-4 hidden">❌ Invalid username or password</p>
+  </div>
+
+  <script>
+    document.getElementById("login-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      if (username === "admin" && password === "admin") {
+        localStorage.setItem("loggedIn", "true");
+        window.location.href = "dashboard.html";
+      } else {
+        document.getElementById("error-msg").classList.remove("hidden");
+      }
+    });
+  </script>
+</body>
+</html>
