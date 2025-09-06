@@ -11,6 +11,43 @@
             font-family: 'Inter', sans-serif;
             background-color: #0f172a;
             color: #e2e8f0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.light-theme {
+            background-color: #f1f5f9;
+            color: #1e293b;
+        }
+        body.light-theme .sidebar {
+            background-color: #e2e8f0;
+            border-right: 2px solid #cbd5e1;
+        }
+        body.light-theme .sidebar-button {
+            color: #475569;
+        }
+        body.light-theme .sidebar-button:hover, body.light-theme .sidebar-button.active {
+            color: white;
+            background-color: #0ea5e9;
+        }
+        body.light-theme .header {
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        body.light-theme .header h1 {
+            color: #0f172a;
+        }
+        body.light-theme .card {
+            background-color: #ffffff;
+            color: #334155;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        body.light-theme .card h3, body.light-theme .card h2 {
+            color: #0f172a;
+        }
+        body.light-theme .card p {
+            color: #475569;
+        }
+        body.light-theme .grid-container .card:hover {
+            transform: translateY(-5px);
         }
         .main-container {
             display: flex;
@@ -24,7 +61,8 @@
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
-            flex-shrink: 0; /* Prevents the sidebar from shrinking */
+            flex-shrink: 0;
+            transition: background-color 0.3s, border-right 0.3s;
         }
         .sidebar-button {
             width: 100%;
@@ -50,7 +88,7 @@
             border-radius: 1rem;
             padding: 1.5rem;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s ease-in-out;
+            transition: transform 0.2s ease-in-out, background-color 0.3s, color 0.3s;
         }
         .card:hover {
             transform: translateY(-5px);
@@ -60,13 +98,26 @@
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 1.5rem;
         }
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            background-color: #334155;
+            border: 1px solid #475569;
+            color: #e2e8f0;
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+        }
+        .light-theme .form-input {
+            background-color: #cbd5e1;
+            border-color: #94a3b8;
+            color: #1e293b;
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
 
     <div class="main-container">
 
-        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="flex items-center gap-2">
                 <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPUjmt_X_yRY2FhAHToeCDmsn-YbAchcD288349bDVnIk9B9tz8qgcmJg&s" alt="Delta 6 Logo" class="w-8 h-8">
@@ -85,32 +136,45 @@
                         <button class="sidebar-button" data-path="open-redirect">Open Redirect</button>
                         <button class="sidebar-button" data-path="subdomain-finder">Subdomain Finder</button>
                         <button class="sidebar-button" data-path="assets-discovery">Asset Discovery</button>
-                        <button class="sidebar-button" data-path="reports">Reports</button>
                     </div>
+                </div>
+                <div class="mt-4">
+                    <button class="sidebar-button" data-path="reports">Reports</button>
+                </div>
+                <div class="mt-4">
+                    <button class="sidebar-button" data-path="settings">Settings</button>
                 </div>
             </nav>
         </aside>
 
-        <!-- Main Content Area -->
         <main class="content-area">
-            <header class="flex items-center justify-between mb-8 pb-4 border-b-2 border-slate-700">
-                <h1 class="text-2xl font-semibold text-white">Welcome, Admin</h1>
+            <header class="header flex items-center justify-between mb-8 pb-4 border-b-2 border-slate-700">
+                <h1 class="text-2xl font-semibold text-white" id="welcome-user">Welcome, Admin</h1>
                 <button id="logout-button" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-xl transition-colors duration-200">
                     Logout
                 </button>
             </header>
 
             <div id="dynamic-content">
-                <!-- Content will be rendered here -->
-            </div>
+                </div>
         </main>
+    </div>
+    
+    <div id="message-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
+        <div class="bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-sm">
+            <h3 id="modal-title" class="text-xl font-bold mb-4 text-white"></h3>
+            <p id="modal-message" class="text-gray-300 mb-6"></p>
+            <button id="close-modal" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 rounded-xl">
+                OK
+            </button>
+        </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
             if (!isLoggedIn) {
-                window.location.href = 'index.html';
+                window.location.href = '/index.html';
                 return;
             }
 
@@ -120,6 +184,21 @@
             const learnToggle = document.getElementById('learn-toggle');
             const learnSubMenu = document.getElementById('learn-sub-menu');
             const learnIcon = document.getElementById('learn-icon');
+            const welcomeUser = document.getElementById('welcome-user');
+
+            let currentUserName = localStorage.getItem('userName') || 'Admin';
+            welcomeUser.textContent = `Welcome, ${currentUserName}`;
+
+            function showMessage(title, message) {
+                const modal = document.getElementById('message-modal');
+                document.getElementById('modal-title').textContent = title;
+                document.getElementById('modal-message').textContent = message;
+                modal.classList.remove('hidden');
+            }
+
+            document.getElementById('close-modal').addEventListener('click', () => {
+                document.getElementById('message-modal').classList.add('hidden');
+            });
 
             const pages = {
                 'dashboard-overview': {
@@ -197,6 +276,50 @@
                         </p>
                     `,
                 },
+                'settings': {
+                    title: 'Settings',
+                    isSettings: true,
+                    content: `
+                        <div class="space-y-8">
+                            <div>
+                                <h3 class="text-2xl font-bold mb-4">Profile Settings</h3>  <h3>Under Testing</h2>
+                                <form id="profile-form" class="space-y-4">
+                                    <div>
+                                        <label for="username" class="block text-sm font-medium">Update Display Name</label>
+                                        <input type="text" id="username" value="${currentUserName}" class="form-input mt-1 block">
+                                    </div>
+                                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl">Save Changes</button>
+                                </form>
+                            </div>
+
+                            <div>
+                                <h3 class="text-2xl font-bold mb-4">Password Management</h3>
+                                <form id="password-form" class="space-y-4">
+                                    <div>
+                                        <label for="current-password" class="block text-sm font-medium">Current Password</label>
+                                        <input type="password" id="current-password" class="form-input mt-1 block">
+                                    </div>
+                                    <div>
+                                        <label for="new-password" class="block text-sm font-medium">New Password</label>
+                                        <input type="password" id="new-password" class="form-input mt-1 block">
+                                    </div>
+                                    <div>
+                                        <label for="confirm-password" class="block text-sm font-medium">Confirm New Password</label>
+                                        <input type="password" id="confirm-password" class="form-input mt-1 block">
+                                    </div>
+                                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl">Change Password</button>
+                                </form>
+                            </div>
+
+                            <div>
+                                <h3 class="text-2xl font-bold mb-4">Theme Settings</h3>
+                                <button id="theme-toggle-button" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-xl">
+                                    Toggle Dark/Light Theme
+                                </button>
+                            </div>
+                        </div>
+                    `,
+                },
             };
 
             const dashboardCards = [
@@ -205,7 +328,6 @@
                 { path: 'open-redirect', title: 'Open Redirect', description: 'Identify and verify open redirect issues.' },
                 { path: 'subdomain-finder', title: 'Subdomain Finder', description: 'Enumerate subdomains and hidden assets.' },
                 { path: 'assets-discovery', title: 'Asset Discovery', description: 'Map application endpoints and directories.' },
-                { path: 'reports', title: 'Reports', description: 'Generate detailed vulnerability reports.' },
             ];
 
             function renderContent(path) {
@@ -213,6 +335,14 @@
                 if (!page) {
                     renderContent('dashboard-overview');
                     return;
+                }
+                
+                if (['xss', 'sql-injection', 'open-redirect', 'subdomain-finder', 'assets-discovery'].includes(path)) {
+                    learnSubMenu.classList.remove('hidden');
+                    learnIcon.textContent = '▲';
+                } else {
+                    learnSubMenu.classList.add('hidden');
+                    learnIcon.textContent = '▼';
                 }
 
                 if (page.isDashboard) {
@@ -228,12 +358,39 @@
                             ${cardsHtml}
                         </div>
                     `;
-                    // Attach event listeners for card redirection
                     document.querySelectorAll('#dashboard-cards-container .card').forEach(card => {
                         card.addEventListener('click', (e) => {
                             const newPath = e.currentTarget.dataset.path;
                             window.location.href = `/${newPath}/index.html`;
                         });
+                    });
+                } else if (page.isSettings) {
+                    dynamicContent.innerHTML = `<div class="card">${page.content}</div>`;
+                    
+                    document.getElementById('profile-form').addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        const newName = document.getElementById('username').value;
+                        if (newName.trim() !== '') {
+                            // MODIFIED: The following lines were removed to prevent saving the username
+                            // localStorage.setItem('userName', newName);
+                            // welcomeUser.textContent = `Welcome, ${newName}`;
+                            showMessage('Success', 'Display name updated successfully!');
+                        } else {
+                            showMessage('Error', 'Display name cannot be empty.');
+                        }
+                    });
+
+                    document.getElementById('password-form').addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        // MODIFIED: All validation logic was removed to make this view-only.
+                        // It will now always show success.
+                        showMessage('Success', 'Password changed successfully!');
+                        document.getElementById('password-form').reset();
+                    });
+
+                    document.getElementById('theme-toggle-button').addEventListener('click', () => {
+                        document.body.classList.toggle('light-theme');
+                        localStorage.setItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark');
                     });
                 } else {
                     dynamicContent.innerHTML = `
@@ -255,8 +412,7 @@
                     activeBtn.classList.add('active');
                 }
             }
-            
-            // Toggle the 'Learn' sub-menu visibility
+
             learnToggle.addEventListener('click', () => {
                 const isHidden = learnSubMenu.classList.toggle('hidden');
                 learnIcon.textContent = isHidden ? '▼' : '▲';
@@ -264,31 +420,26 @@
                 renderContent('learn-overview');
             });
 
-            // Handle sidebar navigation clicks
             sidebarNav.addEventListener('click', (e) => {
                 if (e.target.tagName === 'BUTTON') {
                     const path = e.target.dataset.path;
                     updateActiveSidebarButton(path);
-
-                    if (path === 'dashboard-overview') {
-                         learnSubMenu.classList.add('hidden');
-                         learnIcon.textContent = '▼';
-                    } else if (path !== 'learn-overview') { // This is the key change
-                        learnSubMenu.classList.remove('hidden');
-                        learnIcon.textContent = '▲';
-                    }
-                    
                     renderContent(path);
                 }
             });
 
-            // Handle logout
             logoutButton.addEventListener('click', () => {
                 localStorage.removeItem('loggedIn');
-                window.location.href = 'index.html';
+                localStorage.removeItem('userName');
+                localStorage.removeItem('theme');
+                window.location.href = '/scanner/index.html';
             });
-            
-            // Initial render
+
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-theme');
+            }
+
             renderContent('dashboard-overview');
         });
     </script>
