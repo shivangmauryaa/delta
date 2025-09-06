@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Delta 6 - Dashboard</title>
+    <title>Delta - Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
@@ -17,174 +17,108 @@
             background-color: #f1f5f9;
             color: #1e293b;
         }
-        body.light-theme .sidebar {
-            background-color: #e2e8f0;
-            border-right-color: #cbd5e1;
-        }
-        body.light-theme .sidebar-button {
-            color: #475569;
-        }
-        body.light-theme .sidebar-button:hover, body.light-theme .sidebar-button.active {
-            color: white;
-            background-color: #0ea5e9;
-        }
-        body.light-theme .header {
-            background-color: white;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-        body.light-theme .header h1 {
-            color: #0f172a;
-        }
-        body.light-theme .card {
-            background-color: #ffffff;
-            color: #334155;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-        }
-        body.light-theme .card h3, body.light-theme .card h2 {
-            color: #0f172a;
-        }
-        body.light-theme .card p {
-            color: #475569;
-        }
-        body.light-theme .grid-container .card:hover {
-            transform: translateY(-5px);
-        }
-        .main-container {
-            display: flex;
-            min-height: 100vh;
-        }
-        .sidebar {
-            width: 256px;
-            background-color: #1e293b;
-            padding: 1.5rem;
-            border-right: 2px solid #334155;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            flex-shrink: 0;
-            transition: background-color 0.3s, border-right 0.3s;
-        }
-        .sidebar-button {
-            width: 100%;
-            text-align: left;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            color: #94a3b8;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-        .sidebar-button:hover, .sidebar-button.active {
-            color: #e2e8f0;
-            background-color: #0ea5e9;
-        }
-        .content-area {
-            flex-grow: 1;
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-        }
-        .card {
-            background-color: #1e293b;
-            border-radius: 1rem;
-            padding: 1.5rem;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s ease-in-out, background-color 0.3s, color 0.3s;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-        }
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-        .form-input {
-            width: 100%;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            background-color: #334155;
-            border: 1px solid #475569;
-            color: #e2e8f0;
-            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
-        }
-        .light-theme .form-input {
-            background-color: #cbd5e1;
-            border-color: #94a3b8;
-            color: #1e293b;
-        }
-        /* Notification Styles */
-        #notification-panel {
-            z-index: 50;
-            border: 1px solid #334155;
-        }
-        .notification-item {
-            border-bottom: 1px solid #334155;
-        }
-        .notification-item:last-child {
-            border-bottom: none;
-        }
-        .light-theme #notification-panel {
-            background-color: #f8fafc;
-            border-color: #e2e8f0;
-        }
-        .light-theme .notification-item {
-            border-color: #e2e8f0;
-        }
-        
-        /* --- STYLE FOR NOTIFICATION SCROLLBAR (NEWLY ADDED) --- */
-        #notification-list {
-            max-height: 320px; /* Limits the height to show ~5 notifications */
-            overflow-y: auto;  /* Adds a scrollbar ONLY when content overflows */
-        }
-        /* Custom scrollbar styling */
-        #notification-list::-webkit-scrollbar {
-            width: 8px;
-        }
-        #notification-list::-webkit-scrollbar-track {
-            background: #1e293b; 
-        }
-        #notification-list::-webkit-scrollbar-thumb {
-            background-color: #475569;
-            border-radius: 4px;
-        }
-        .light-theme #notification-list::-webkit-scrollbar-track {
-            background: #e2e8f0;
-        }
-        .light-theme #notification-list::-webkit-scrollbar-thumb {
-            background-color: #94a3b8;
-        }
-
+        body.light-theme .sidebar { background-color: #e2e8f0; border-right-color: #cbd5e1; }
+        body.light-theme .sidebar-button { color: #475569; }
+        body.light-theme .sidebar-button:hover, body.light-theme .sidebar-button.active { color: white; background-color: #0ea5e9; }
+        body.light-theme .header { background-color: white; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
+        body.light-theme .header h1 { color: #0f172a; }
+        body.light-theme .card { background-color: #ffffff; color: #334155; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); }
+        body.light-theme .card h3, body.light-theme .card h2 { color: #0f172a; }
+        body.light-theme .card p { color: #475569; }
+        body.light-theme .grid-container .card:hover { transform: translateY(-5px); }
+        .main-container { display: flex; min-height: 100vh; }
+        .sidebar { width: 256px; background-color: #1e293b; padding: 1.5rem; border-right: 2px solid #334155; display: flex; flex-direction: column; gap: 1.5rem; flex-shrink: 0; transition: background-color 0.3s, border-right 0.3s; }
+        .sidebar-button { width: 100%; text-align: left; padding: 0.5rem 1rem; border-radius: 0.5rem; color: #94a3b8; font-weight: 600; transition: all 0.2s; display: flex; align-items: center; gap: 0.75rem; }
+        .sidebar-button:hover, .sidebar-button.active { color: #e2e8f0; background-color: #0ea5e9; }
+        .sidebar-button svg { width: 1.25rem; height: 1.25rem; flex-shrink: 0; }
+        .content-area { flex-grow: 1; padding: 2rem; display: flex; flex-direction: column; }
+        .card { background-color: #1e293b; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); transition: transform 0.2s ease-in-out, background-color 0.3s, color 0.3s; }
+        .card:hover { transform: translateY(-5px); }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+        .form-input { width: 100%; padding: 0.75rem; border-radius: 0.5rem; background-color: #334155; border: 1px solid #475569; color: #e2e8f0; transition: background-color 0.3s, border-color 0.3s, color 0.3s; }
+        body.light-theme .form-input { background-color: #cbd5e1; border-color: #94a3b8; color: #1e293b; }
+        #notification-panel { z-index: 50; border: 1px solid #334155; }
+        .notification-item { border-bottom: 1px solid #334155; }
+        .notification-item:last-child { border-bottom: none; }
+        body.light-theme #notification-panel { background-color: #f8fafc; border-color: #e2e8f0; }
+        body.light-theme .notification-item { border-color: #e2e8f0; }
+        #notification-list { max-height: 320px; overflow-y: auto; }
+        #notification-list::-webkit-scrollbar { width: 8px; }
+        #notification-list::-webkit-scrollbar-track { background: #1e293b; }
+        #notification-list::-webkit-scrollbar-thumb { background-color: #475569; border-radius: 4px; }
+        body.light-theme #notification-list::-webkit-scrollbar-track { background: #e2e8f0; }
+        body.light-theme #notification-list::-webkit-scrollbar-thumb { background-color: #94a3b8; }
+        body.light-theme #targets-list-container .bg-slate-800, body.light-theme #history-list-container .bg-slate-800 { background-color: #f1f5f9; border: 1px solid #e2e8f0; }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
 
     <div class="main-container">
-
         <aside class="sidebar">
             <div class="flex items-center gap-2">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPUjmt_X_yRY2FhAHToeCDmsn-YbAchcD288349bDVnIk9B9tz8qgcmJg&s" alt="Delta 6 Logo" class="w-8 h-8">
+                <img src="https://t3.ftcdn.net/jpg/01/68/62/98/360_F_168629858_n3Lw3i71XzIlwCtVNmeOiJhvI3Wa44Ni.jpg" alt="Delta 6 Logo" class="w-8 h-8">
                 <h1 class="text-2xl font-bold">Delta</h1>
             </div>
-            <nav class="flex flex-col gap-2" id="sidebar-nav">
-                <button class="sidebar-button active" data-path="dashboard-overview">Dashboard</button>
+            <nav class="flex flex-col gap-1" id="sidebar-nav">
+                <!-- MAIN -->
+                <div>
+                    <h2 class="px-4 mb-2 text-xs font-bold uppercase text-gray-500">Main</h2>
+                    <button class="sidebar-button active" data-path="dashboard-overview">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg>
+                        <span>Dashboard</span>
+                    </button>
+                    <button class="sidebar-button" data-path="targets">
+                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m0 13.5v2.25m0-11.25l1.04 1.732a4.5 4.5 0 007.823 0l1.04-1.732M12 21.75l-1.04-1.732a4.5 4.5 0 00-7.823 0L3 19.5m0-11.25l1.04 1.732a4.5 4.5 0 007.823 0L12 6.75" /></svg>
+                        <span>Targets</span>
+                    </button>
+                    <button class="sidebar-button" data-path="scan-history">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span>Scan History</span>
+                    </button>
+                </div>
+
+                <!-- TOOLS -->
                 <div class="mt-4">
-                    <button id="learn-toggle" class="sidebar-button flex items-center justify-between" data-path="learn-overview">
-                        <h2 class="text-sm font-bold uppercase text-gray-400">Learn</h2>
+                    <h2 class="px-4 mb-2 text-xs font-bold uppercase text-gray-500">Tools</h2>
+                    <button class="sidebar-button" data-path="port-scanner">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.136 12.006a8.25 8.25 0 0113.728 0M2.002 8.995a11.25 11.25 0 0119.996 0" /></svg>
+                        <span>Port Scan</span>
+                    </button>
+                    <button class="sidebar-button" data-path="tech-detector">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 19.5V21M12 3v1.5m0 15V21m3.75-18v1.5m0 15V21m-9-1.5h10.5a2.25 2.25 0 002.25-2.25V8.25a2.25 2.25 0 00-2.25-2.25H6.75A2.25 2.25 0 004.5 8.25v7.5a2.25 2.25 0 002.25 2.25z" /></svg>
+                        <span>Tech Detect</span>
+                    </button>
+                    <button class="sidebar-button" data-path="secrets-scanner">
+                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" /></svg>
+                        <span>Secrets Scan</span>
+                    </button>
+                </div>
+
+                <!-- GENERAL -->
+                <div class="mt-4">
+                    <h2 class="px-4 mb-2 text-xs font-bold uppercase text-gray-500">General</h2>
+                     <button id="learn-toggle" class="sidebar-button flex items-center justify-between" data-path="learn-overview">
+                        <div class="flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /></svg>
+                            <span>Learn</span>
+                        </div>
                         <span id="learn-icon">▼</span>
                     </button>
-                    <div id="learn-sub-menu" class="flex flex-col gap-2 pl-4 mt-2 hidden">
-                        <button class="sidebar-button" data-path="xss">XSS Scanner</button>
-                        <button class="sidebar-button" data-path="sql-injection">SQLi Scanner</button>
-                        <button class="sidebar-button" data-path="open-redirect">Open Redirect</button>
-                        <button class="sidebar-button" data-path="subdomain-finder">Subdomain Finder</button>
-                        <button class="sidebar-button" data-path="assets-discovery">Asset Discovery</button>
+                    <div id="learn-sub-menu" class="flex flex-col gap-1 pl-4 mt-1 hidden">
+                        <button class="sidebar-button !py-1" data-path="xss">XSS Scanner</button>
+                        <button class="sidebar-button !py-1" data-path="sql-injection">SQLi Scanner</button>
+                        <button class="sidebar-button !py-1" data-path="open-redirect">Open Redirect</button>
+                        <button class="sidebar-button !py-1" data-path="subdomain-finder">Subdomain Finder</button>
+                        <button class="sidebar-button !py-1" data-path="assets-discovery">Asset Discovery</button>
                     </div>
-                </div>
-                <div class="mt-4">
-                    <button class="sidebar-button" data-path="reports">Reports</button>
-                </div>
-                <div class="mt-4">
-                    <button class="sidebar-button" data-path="settings">Settings</button>
+                    <button class="sidebar-button" data-path="reports">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h12M3.75 3h16.5M3.75 3v4.5A2.25 2.25 0 006 9.75h4.5M3.75 14.25v-3.75h4.5a2.25 2.25 0 012.25 2.25v1.5" /></svg>
+                        <span>Reports</span>
+                    </button>
+                    <button class="sidebar-button" data-path="settings">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.343 3.94c.09-.542.56-1.007 1.11-1.226.554-.22 1.198-.059 1.62.336.422.395.632.96.495 1.503-.137.543-.593 1.01-1.11 1.227-.554.218-1.198.058-1.62-.337-.422-.395-.632-.96-.495-1.503zM14.25 10.134c.422.395.632.96.495 1.503-.137.543-.593 1.01-1.11 1.227-.554.218-1.198.058-1.62-.337-.422-.395-.632-.96-.495-1.503.137-.543.593-1.01 1.11-1.226.554-.22 1.198-.059 1.62.336zM18.157 16.328c.422.395.632.96.495 1.503-.137.543-.593 1.01-1.11 1.227-.554.218-1.198.058-1.62-.337-.422-.395-.632-.96-.495-1.503.137-.543.593-1.01 1.11-1.226.554-.22 1.198-.059 1.62.336z" /></svg>
+                        <span>Settings</span>
+                    </button>
                 </div>
             </nav>
         </aside>
@@ -195,21 +129,17 @@
                 <div class="flex items-center gap-4">
                     <div class="relative">
                         <button id="notification-bell" class="relative p-2 rounded-full hover:bg-slate-700 focus:outline-none">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
                             <span id="notification-badge" class="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full hidden"></span>
                         </button>
                         <div id="notification-panel" class="absolute right-0 mt-2 w-80 bg-slate-800 rounded-lg shadow-lg p-2 hidden">
-                            <div id="notification-list" class="flex flex-col gap-1">
-                            </div>
+                            <div id="notification-list" class="flex flex-col gap-1"></div>
                         </div>
                     </div>
-                    <button id="logout-button" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-xl transition-colors duration-200">
-                        Logout
-                    </button>
+                    <button id="logout-button" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-xl transition-colors duration-200">Logout</button>
                 </div>
             </header>
-            <div id="dynamic-content">
-            </div>
+            <div id="dynamic-content"></div>
         </main>
     </div>
     
@@ -217,311 +147,372 @@
         <div class="bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-sm">
             <h3 id="modal-title" class="text-xl font-bold mb-4 text-white"></h3>
             <p id="modal-message" class="text-gray-300 mb-6"></p>
-            <button id="close-modal" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 rounded-xl">
-                OK
-            </button>
+            <button id="close-modal" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 rounded-xl">OK</button>
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
-            if (!isLoggedIn) {
-                window.location.href = '/scanner/index.html';
-                return;
-            }
+    <div id="confirmation-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-800 p-8 rounded-xl shadow-lg w-full max-w-sm">
+            <h3 id="confirm-title" class="text-xl font-bold mb-4 text-white">Confirm Logout</h3>
+            <p id="confirm-message" class="text-slate-300 mb-6">Are you sure you want to log out?</p>
+            <div class="flex gap-4 mt-6">
+                 <button id="confirm-cancel-btn" class="w-full bg-slate-600 hover:bg-slate-700 text-white font-semibold py-2 rounded-xl">Cancel</button>
+                 <button id="confirm-action-btn" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 rounded-xl">Logout</button>
+            </div>
+        </div>
+    </div>
 
-            const dynamicContent = document.getElementById('dynamic-content');
-            const sidebarNav = document.getElementById('sidebar-nav');
-            const logoutButton = document.getElementById('logout-button');
-            const learnToggle = document.getElementById('learn-toggle');
-            const learnSubMenu = document.getElementById('learn-sub-menu');
-            const learnIcon = document.getElementById('learn-icon');
-            const welcomeUser = document.getElementById('welcome-user');
-            
-            const notificationBell = document.getElementById('notification-bell');
-            const notificationPanel = document.getElementById('notification-panel');
-            const notificationList = document.getElementById('notification-list');
-            const notificationBadge = document.getElementById('notification-badge');
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
+        if (!isLoggedIn) {
+            window.location.href = '/scanner/index.html';
+            return;
+        }
 
-            let currentUserName = localStorage.getItem('userName') || 'Admin';
-            welcomeUser.textContent = `Welcome, ${currentUserName}`;
+        const dynamicContent = document.getElementById('dynamic-content');
+        const sidebarNav = document.getElementById('sidebar-nav');
+        const logoutButton = document.getElementById('logout-button');
+        const learnToggle = document.getElementById('learn-toggle');
+        const learnSubMenu = document.getElementById('learn-sub-menu');
+        const learnIcon = document.getElementById('learn-icon');
+        const welcomeUser = document.getElementById('welcome-user');
+        const notificationBell = document.getElementById('notification-bell');
+        const notificationPanel = document.getElementById('notification-panel');
+        const notificationList = document.getElementById('notification-list');
+        const notificationBadge = document.getElementById('notification-badge');
+        const confirmationModal = document.getElementById('confirmation-modal');
+        let currentUserName = localStorage.getItem('userName') || 'Admin';
+        welcomeUser.textContent = `Welcome, ${currentUserName}`;
 
-            function addNotification(message) {
-                const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
-                notifications.unshift({ text: message, time: new Date().toLocaleTimeString(), read: false });
-                localStorage.setItem('notifications', JSON.stringify(notifications.slice(0, 10)));
+        function addNotification(message) {
+            const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+            notifications.unshift({ text: message, time: new Date().toLocaleTimeString(), read: false });
+            localStorage.setItem('notifications', JSON.stringify(notifications.slice(0, 10)));
+            updateNotificationBadge();
+        }
+
+        function markNotificationsAsRead() {
+            let notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+            if (notifications.some(n => !n.read)) {
+                notifications.forEach(n => n.read = true);
+                localStorage.setItem('notifications', JSON.stringify(notifications));
                 updateNotificationBadge();
             }
+        }
 
-            function renderNotifications() {
-                const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
-                notificationList.innerHTML = ''; 
-
-                if (notifications.length === 0) {
-                    notificationList.innerHTML = '<p class="text-center text-gray-400 p-4">No new notifications.</p>';
-                    return;
-                }
-
-                notifications.forEach(notif => {
-                    const item = document.createElement('div');
-                    item.className = 'notification-item p-3 rounded-lg';
-                    item.innerHTML = `
-                        <p class="font-semibold text-sm">${notif.text}</p>
-                        <p class="text-xs text-gray-400">${notif.time}</p>
-                    `;
-                    notificationList.appendChild(item);
-                });
+        function renderNotifications() {
+            const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+            notificationList.innerHTML = ''; 
+            if (notifications.length === 0) {
+                notificationList.innerHTML = '<p class="text-center text-gray-400 p-4">No new notifications.</p>';
+                return;
             }
-            
-            function updateNotificationBadge() {
-                const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
-                if (notifications.length > 0) {
-                    notificationBadge.classList.remove('hidden');
-                } else {
-                    notificationBadge.classList.add('hidden');
-                }
+            notifications.forEach(notif => {
+                const item = document.createElement('div');
+                const unreadClass = !notif.read ? ' bg-sky-900/[.30]' : '';
+                item.className = 'notification-item p-3 rounded-lg' + unreadClass;
+                item.innerHTML = `<p class="font-semibold text-sm">${notif.text}</p><p class="text-xs text-gray-400">${notif.time}</p>`;
+                notificationList.appendChild(item);
+            });
+        }
+        
+        function updateNotificationBadge() {
+            const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+            const hasUnread = notifications.some(n => !n.read);
+            notificationBadge.classList.toggle('hidden', !hasUnread);
+        }
+        
+        notificationBell.addEventListener('click', (event) => {
+            event.stopPropagation();
+            notificationPanel.classList.toggle('hidden');
+            if (!notificationPanel.classList.contains('hidden')) {
+                renderNotifications();
+                markNotificationsAsRead();
             }
-            
-            notificationBell.addEventListener('click', (event) => {
-                event.stopPropagation(); // Prevents the document click listener from firing immediately
-                notificationPanel.classList.toggle('hidden');
-                if (!notificationPanel.classList.contains('hidden')) {
-                    renderNotifications();
-                }
-            });
-
-            function showMessage(title, message) {
-                const modal = document.getElementById('message-modal');
-                document.getElementById('modal-title').textContent = title;
-                document.getElementById('modal-message').textContent = message;
-                modal.classList.remove('hidden');
-            }
-
-            document.getElementById('close-modal').addEventListener('click', () => {
-                document.getElementById('message-modal').classList.add('hidden');
-            });
-
-            const pages = {
-                'dashboard-overview': {
-                    title: 'Dashboard Overview',
-                    isDashboard: true
-                },
-                'learn-overview': {
-                    title: 'Learn about Vulnerabilities',
-                    description: 'Here you will find an extensive guide to common web vulnerabilities. Each section provides a detailed explanation of how a specific bug works, its potential impact, and crucial prevention techniques to help you build more secure applications. Select a bug from the "Learn" menu to begin your journey.'
-                },
-                'xss': {
-                    title: 'XSS Scanner',
-                    description: 'A tool for detecting Cross-Site Scripting vulnerabilities. XSS is a vulnerability that allows an attacker to inject malicious scripts into web pages viewed by other users. This can be used to steal user session cookies, redirect users, or perform other malicious actions.',
-                    prevention: `
-                        <h4 class="text-xl font-bold mt-6 mb-2 text-white">Prevention</h4>
-                        <ul class="list-disc list-inside space-y-2">
-                            <li><b>Sanitize and escape</b> all untrusted data before inserting it into the HTML.</li>
-                            <li>Set the <b>HttpOnly</b> flag on session cookies to prevent them from being accessed by client-side scripts.</li>
-                            <li>Implement a strong <b>Content Security Policy (CSP)</b> to control which scripts can execute.</li>
-                        </ul>
-                    `,
-                },
-                'sql-injection': {
-                    title: 'SQL Injection (SQLi) Scanner',
-                    description: 'Test parameters for SQL injection flaws. SQL injection is a code injection technique in which malicious SQL statements are inserted into an entry field for execution. An attacker can use this to bypass authentication, retrieve data, or even modify the database.',
-                    prevention: `
-                        <h4 class="text-xl font-bold mt-6 mb-2 text-white">Prevention</h4>
-                        <ul class="list-disc list-inside space-y-2">
-                            <li>Use <b>Prepared Statements</b> with parameterized queries. This separates the SQL command from the user-provided data.</li>
-                            <li>Use <b>Stored Procedures</b>.</li>
-                            <li>Validate and sanitize all user input.</li>
-                            <li>Minimize database permissions for web applications.</li>
-                        </ul>
-                    `,
-                },
-                'open-redirect': {
-                    title: 'Open Redirect',
-                    description: 'A tool to identify and verify open redirect issues. This is a vulnerability where a web application allows an attacker to manipulate parameters and redirect users to a malicious website. This is often used in phishing campaigns.',
-                    prevention: `
-                        <h4 class="text-xl font-bold mt-6 mb-2 text-white">Prevention</h4>
-                        <ul class="list-disc list-inside space-y-2">
-                            <li>Do not use untrusted input to build redirection URLs.</li>
-                            <li>Use a whitelist of allowed domains or paths for all redirects.</li>
-                            <li>Inform the user before redirecting them to an external site.</li>
-                        </ul>
-                    `,
-                },
-                'subdomain-finder': {
-                    title: 'Subdomain Finder',
-                    description: 'A tool for enumerating subdomains and hidden assets. This is a reconnaissance technique used to map out a target\'s attack surface and find other entry points.',
-                    prevention: `
-                        <h4 class="text-xl font-bold mt-6 mb-2 text-white">Prevention</h4>
-                        <p class="text-gray-400 mt-2">
-                            While finding subdomains is not a vulnerability in itself, it is a critical step in reconnaissance. To reduce your attack surface, ensure all unused subdomains are properly decommissioned. Always secure all subdomains with the same rigor as your main domain.
-                        </p>
-                    `,
-                },
-                'assets-discovery': {
-                    title: 'Asset Discovery',
-                    description: 'A tool for mapping application endpoints and directories. Attackers use this to identify potential vulnerabilities in older scripts or to find hidden assets not visible to the user.',
-                    prevention: `
-                        <h4 class="text-xl font-bold mt-6 mb-2 text-white">Prevention</h4>
-                        <p class="text-gray-400 mt-2">
-                            This is another reconnaissance technique. To mitigate risks, ensure that all assets are up-to-date and that there are no sensitive files or information accessible through direct links. Regularly audit your publicly available files.
-                        </p>
-                    `,
-                },
-                'reports': {
-                    title: 'Reports',
-                    description: 'Generate detailed vulnerability reports. This is a placeholder for a future feature to summarize scan findings and provide actionable insights.',
-                    prevention: `
-                        <h4 class="text-xl font-bold mt-6 mb-2 text-white">Status</h4>
-                        <p class="text-gray-400 mt-2">
-                            This feature is currently under development. Please check back later.
-                        </p>
-                    `,
-                },
-                'settings': {
-                    title: 'Settings', isSettings: true,
-                    content: `
-                        <div class="space-y-8">
-                            <div>
-                                <h3 class="text-2xl font-bold mb-4">Profile Settings</h3>
-                                <p class="text-sm text-gray-400 mb-4">This form is for demonstration purposes. Your display name will not be permanently changed.</p>
-                                <form id="profile-form" class="space-y-4">
-                                    <div><label for="username" class="block text-sm font-medium">Update Display Name</label><input type="text" id="username" value="${currentUserName}" class="form-input mt-1 block"></div>
-                                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl">Save Changes</button>
-                                </form>
-                            </div>
-                            <div>
-                                <h3 class="text-2xl font-bold mb-4">Password Management</h3>
-                                <p class="text-sm text-gray-400 mb-4">This is a view-only form. The password cannot be changed from this interface.</p>
-                                <form id="password-form" class="space-y-4">
-                                    <div><label for="current-password" class="block text-sm font-medium">Current Password</label><input type="password" id="current-password" class="form-input mt-1 block"></div>
-                                    <div><label for="new-password" class="block text-sm font-medium">New Password</label><input type="password" id="new-password" class="form-input mt-1 block"></div>
-                                    <div><label for="confirm-password" class="block text-sm font-medium">Confirm New Password</label><input type="password" id="confirm-password" class="form-input mt-1 block"></div>
-                                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl">Change Password</button>
-                                </form>
-                            </div>
-                            <div>
-                                <h3 class="text-2xl font-bold mb-4">Theme Settings</h3>
-                                <button id="theme-toggle-button" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-xl">Toggle Dark/Light Theme</button>
-                            </div>
-                        </div>`
-                },
-            };
-
-            const dashboardCards = [
-                { path: 'xss', title: 'XSS Scanner', description: 'Detect reflected and stored XSS vulnerabilities.' },
-                { path: 'sql-injection', title: 'SQL Injection', description: 'Test parameters for SQL injection flaws.' },
-                { path: 'open-redirect', title: 'Open Redirect', description: 'Identify and verify open redirect issues.' },
-                { path: 'subdomain-finder', title: 'Subdomain Finder', description: 'Enumerate subdomains and hidden assets.' },
-                { path: 'assets-discovery', title: 'Asset Discovery', description: 'Map application endpoints and directories.' },
-            ];
-
-            function renderContent(path) {
-                const page = pages[path];
-                if (!page) { renderContent('dashboard-overview'); return; }
-                
-                if (['xss', 'sql-injection', 'open-redirect', 'subdomain-finder', 'assets-discovery'].includes(path)) {
-                    learnSubMenu.classList.remove('hidden');
-                    learnIcon.textContent = '▲';
-                } else if (path !== 'learn-overview') {
-                    learnSubMenu.classList.add('hidden');
-                    learnIcon.textContent = '▼';
-                }
-
-                if (page.isDashboard) {
-                    const cardsHtml = dashboardCards.map(card => `<div class="card cursor-pointer" data-path="${card.path}"><h3 class="text-lg font-semibold mb-2 text-white">${card.title}</h3><p class="text-sm text-gray-400">${card.description}</p></div>`).join('');
-                    dynamicContent.innerHTML = `<h2 class="text-xl font-bold mb-6">Dashboard Overview</h2><div class="grid-container" id="dashboard-cards-container">${cardsHtml}</div>`;
-                    
-                    document.querySelectorAll('#dashboard-cards-container .card').forEach(card => {
-                        card.addEventListener('click', (e) => {
-                            const newPath = e.currentTarget.dataset.path;
-                            const cardTitle = e.currentTarget.querySelector('h3').textContent;
-                            addNotification(`Selected ${cardTitle} tool.`);
-                            window.location.href = `/${newPath}/index.html`;
-                        });
-                    });
-                } else if (page.isSettings) {
-                    dynamicContent.innerHTML = `<div class="card">${page.content}</div>`;
-                    
-                    document.getElementById('profile-form').addEventListener('submit', (e) => {
-                        e.preventDefault();
-                        showMessage('Success', 'Display name updated successfully!');
-                        addNotification("Attempted to update profile name.");
-                    });
-                    document.getElementById('password-form').addEventListener('submit', (e) => {
-                        e.preventDefault();
-                        showMessage('Success', 'Password changed successfully!');
-                        addNotification("Attempted to change password.");
-                        document.getElementById('password-form').reset();
-                    });
-                    document.getElementById('theme-toggle-button').addEventListener('click', () => {
-                        document.body.classList.toggle('light-theme');
-                        localStorage.setItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark');
-                        addNotification("Theme settings changed.");
-                    });
-                } else {
-                    dynamicContent.innerHTML = `<div class="card"><h2 class="text-3xl font-bold text-white mb-4">${page.title}</h2><p class="text-gray-400 mb-6">${page.description}</p>${page.prevention || ''}</div>`;
-                }
-            }
-
-            function updateActiveSidebarButton(path) {
-                document.querySelectorAll('.sidebar-button').forEach(btn => btn.classList.remove('active'));
-                const activeBtn = document.querySelector(`[data-path="${path}"]`);
-                if (activeBtn) { activeBtn.classList.add('active'); }
-            }
-
-            learnToggle.addEventListener('click', () => {
-                const isHidden = learnSubMenu.classList.toggle('hidden');
-                learnIcon.textContent = isHidden ? '▼' : '▲';
-                if (!isHidden) {
-                    addNotification("Opened the Learn section.");
-                }
-                updateActiveSidebarButton('learn-overview');
-                renderContent('learn-overview');
-            });
-            
-            document.addEventListener('click', (e) => {
-                if (!notificationPanel.classList.contains('hidden')) {
-                    if (!notificationBell.contains(e.target) && !notificationPanel.contains(e.target)) {
-                        notificationPanel.classList.add('hidden');
-                    }
-                }
-            });
-
-            sidebarNav.addEventListener('click', (e) => {
-                const button = e.target.closest('button');
-                if (!button || button.id === 'learn-toggle') return;
-
-                const path = button.dataset.path;
-                
-                const pageTitle = pages[path] ? pages[path].title : button.textContent.trim();
-                if (path !== 'learn-overview') {
-                    addNotification(`Mapsd to ${pageTitle}.`);
-                }
-                
-                updateActiveSidebarButton(path);
-                renderContent(path);
-            });
-
-            logoutButton.addEventListener('click', () => {
-                localStorage.removeItem('loggedIn');
-                localStorage.removeItem('userName');
-                localStorage.removeItem('theme');
-                localStorage.removeItem('notifications');
-                window.location.href = '/scanner/index.html';
-            });
-
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'light') { document.body.classList.add('light-theme'); }
-            
-            if (!sessionStorage.getItem('welcomed')) {
-                 addNotification(`Welcome back, ${currentUserName}!`);
-                 sessionStorage.setItem('welcomed', 'true');
-            }
-            
-            updateNotificationBadge();
-            renderContent('dashboard-overview');
         });
-    </script>
+
+        function showMessage(title, message) {
+            const modal = document.getElementById('message-modal');
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-message').textContent = message;
+            modal.classList.remove('hidden');
+        }
+
+        document.getElementById('close-modal').addEventListener('click', () => {
+            document.getElementById('message-modal').classList.add('hidden');
+        });
+
+        const generateHistoryHTML = () => `
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold">Scan History</h2>
+                <button id="clear-history-btn" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-xl text-sm transition-colors">Clear History</button>
+            </div>
+            <div class="card"><div id="history-list-container" class="space-y-3"></div></div>`;
+        
+        function renderHistory() {
+            const container = document.getElementById('history-list-container');
+            if (!container) return;
+            const history = JSON.parse(localStorage.getItem('scanHistory')) || [];
+            if (history.length === 0) {
+                container.innerHTML = '<p class="text-gray-400">No scans recorded yet. Start a scan from the dashboard.</p>';
+            } else {
+                container.innerHTML = history.map(item => `
+                    <div class="flex justify-between items-center bg-slate-800 p-3 rounded-lg">
+                        <span class="font-semibold text-sky-400">${item.tool}</span>
+                        <span class="text-gray-400 text-sm">${item.date}</span>
+                    </div>
+                `).join('');
+            }
+        }
+        
+        const generateTargetsHTML = () => `
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold">Manage Targets</h2>
+                <button id="delete-all-targets-btn" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-xl text-sm transition-colors">Delete All</button>
+            </div>
+            <div class="card mb-6"><form id="add-target-form" class="flex flex-col sm:flex-row gap-4"><input type="url" id="target-url-input" class="form-input flex-grow" placeholder="https://example.com" required><button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-xl">Add Target</button></form></div>
+            <div class="card"><h3 class="font-bold text-lg mb-4">Saved URLs</h3><div id="targets-list-container" class="space-y-3"></div></div>`;
+        
+        function renderTargets() {
+            const container = document.getElementById('targets-list-container');
+            if (!container) return;
+            const targets = JSON.parse(localStorage.getItem('userTargets')) || [];
+            if (targets.length === 0) {
+                container.innerHTML = '<p class="text-gray-400">No targets saved. Add a URL above to get started.</p>';
+            } else {
+                container.innerHTML = targets.map((target, index) => `
+                    <div class="flex justify-between items-center bg-slate-800 p-3 rounded-lg">
+                        <span class="font-mono text-sky-400 break-all">${target}</span>
+                        <button data-index="${index}" class="delete-target-btn text-gray-400 hover:text-red-500 transition-colors flex-shrink-0 ml-4">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        </button>
+                    </div>`).join('');
+            }
+            document.querySelectorAll('.delete-target-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const indexToDelete = parseInt(e.currentTarget.dataset.index, 10);
+                    let currentTargets = JSON.parse(localStorage.getItem('userTargets')) || [];
+                    const urlToDelete = currentTargets.splice(indexToDelete, 1);
+                    localStorage.setItem('userTargets', JSON.stringify(currentTargets));
+                    addNotification(`Deleted target: ${urlToDelete}`);
+                    renderTargets();
+                });
+            });
+        }
+
+        const pages = {
+            'dashboard-overview': { title: 'Dashboard Overview', isDashboard: true },
+            'targets': { title: 'Targets', isTargetsPage: true },
+            'scan-history': { title: 'Scan History', isHistoryPage: true },
+            'learn-overview': { title: 'Learn about Vulnerabilities', description: 'Here you will find an extensive guide to common web vulnerabilities. Each section provides a detailed explanation of how a specific bug works, its potential impact, and crucial prevention techniques to help you build more secure applications. Select a bug from the "Learn" menu to begin your journey.'},
+            'xss': {
+                title: 'XSS Scanner',
+                description: 'A tool for detecting Cross-Site Scripting vulnerabilities. XSS is a vulnerability that allows an attacker to inject malicious scripts into web pages viewed by other users. This can be used to steal user session cookies, redirect users, or perform other malicious actions.',
+                prevention: `<h4 class="text-xl font-bold mt-6 mb-2 text-white">Prevention</h4><ul class="list-disc list-inside space-y-2"><li><b>Sanitize and escape</b> all untrusted data before inserting it into the HTML.</li><li>Set the <b>HttpOnly</b> flag on session cookies to prevent them from being accessed by client-side scripts.</li><li>Implement a strong <b>Content Security Policy (CSP)</b> to control which scripts can execute.</li></ul>`,
+            },
+            'sql-injection': {
+                title: 'SQL Injection (SQLi) Scanner',
+                description: 'Test parameters for SQL injection flaws. SQL injection is a code injection technique in which malicious SQL statements are inserted into an entry field for execution. An attacker can use this to bypass authentication, retrieve data, or even modify the database.',
+                prevention: `<h4 class="text-xl font-bold mt-6 mb-2 text-white">Prevention</h4><ul class="list-disc list-inside space-y-2"><li>Use <b>Prepared Statements</b> with parameterized queries.</li><li>Use <b>Stored Procedures</b>.</li><li>Validate and sanitize all user input.</li><li>Minimize database permissions for web applications.</li></ul>`,
+            },
+            'open-redirect': {
+                title: 'Open Redirect',
+                description: 'A tool to identify and verify open redirect issues. This is a vulnerability where a web application allows an attacker to manipulate parameters and redirect users to a malicious website. This is often used in phishing campaigns.',
+                prevention: `<h4 class="text-xl font-bold mt-6 mb-2 text-white">Prevention</h4><ul class="list-disc list-inside space-y-2"><li>Do not use untrusted input to build redirection URLs.</li><li>Use a whitelist of allowed domains or paths for all redirects.</li><li>Inform the user before redirecting them to an external site.</li></ul>`,
+            },
+            'subdomain-finder': {
+                title: 'Subdomain Finder',
+                description: 'A tool for enumerating subdomains and hidden assets. This is a reconnaissance technique used to map out a target\'s attack surface and find other entry points.',
+                prevention: `<h4 class="text-xl font-bold mt-6 mb-2 text-white">Prevention</h4><p class="text-gray-400 mt-2">While finding subdomains is not a vulnerability in itself, it is a critical step in reconnaissance. To reduce your attack surface, ensure all unused subdomains are properly decommissioned. Always secure all subdomains with the same rigor as your main domain.</p>`,
+            },
+            'assets-discovery': {
+                title: 'Asset Discovery',
+                description: 'A tool for mapping application endpoints and directories. Attackers use this to identify potential vulnerabilities in older scripts or to find hidden assets not visible to the user.',
+                prevention: `<h4 class="text-xl font-bold mt-6 mb-2 text-white">Prevention</h4><p class="text-gray-400 mt-2">This is another reconnaissance technique. To mitigate risks, ensure that all assets are up-to-date and that there are no sensitive files or information accessible through direct links. Regularly audit your publicly available files.</p>`,
+            },
+            'reports': {
+                title: 'Reports',
+                description: 'Generate detailed vulnerability reports. This is a placeholder for a future feature to summarize scan findings and provide actionable insights.',
+                prevention: `<h4 class="text-xl font-bold mt-6 mb-2 text-white">Status</h4><p class="text-gray-400 mt-2">This feature is currently under development. Please check back later.</p>`,
+            },
+            'settings': { title: 'Settings', isSettings: true },
+             'port-scanner': { title: 'Port Scanner', description: 'This feature is under development. Check back soon!' },
+            'tech-detector': { title: 'Tech Detector', description: 'This feature is under development. Check back soon!' },
+            'secrets-scanner': { title: 'Secrets Scanner', description: 'This feature is under development. Check back soon!' },
+        };
+
+        const dashboardCards = [
+            { path: 'xss', title: 'XSS Scanner', description: 'Detect reflected and stored XSS vulnerabilities.' },
+            { path: 'sql-injection', title: 'SQL Injection', description: 'Test parameters for SQL injection flaws.' },
+            { path: 'open-redirect', title: 'Open Redirect', description: 'Identify and verify open redirect issues.' },
+            { path: 'subdomain-finder', title: 'Subdomain Finder', description: 'Enumerate subdomains and hidden assets.' },
+            { path: 'assets-discovery', title: 'Asset Discovery', description: 'Map application endpoints and directories.' },
+        ];
+
+        function renderContent(path) {
+            const page = pages[path];
+            if (!page) { renderContent('dashboard-overview'); return; }
+            
+            if (['xss', 'sql-injection', 'open-redirect', 'subdomain-finder', 'assets-discovery'].includes(path)) {
+                learnSubMenu.classList.remove('hidden'); learnIcon.textContent = '▲';
+            } else if (path !== 'learn-overview') {
+                learnSubMenu.classList.add('hidden'); learnIcon.textContent = '▼';
+            }
+
+            if (page.isDashboard) {
+                const cardsHtml = dashboardCards.map(card => `<div class="card cursor-pointer" data-path="${card.path}"><h3 class="text-lg font-semibold mb-2 text-white">${card.title}</h3><p class="text-sm text-gray-400">${card.description}</p></div>`).join('');
+                dynamicContent.innerHTML = `<h2 class="text-xl font-bold mb-6">Dashboard Overview</h2><div class="grid-container" id="dashboard-cards-container">${cardsHtml}</div>`;
+                
+                document.querySelectorAll('#dashboard-cards-container .card').forEach(card => {
+                    card.addEventListener('click', (e) => {
+                        const newPath = e.currentTarget.dataset.path;
+                        const cardTitle = e.currentTarget.querySelector('h3').textContent;
+                        const scanHistory = JSON.parse(localStorage.getItem('scanHistory')) || [];
+                        scanHistory.unshift({ tool: cardTitle, date: new Date().toLocaleString() });
+                        localStorage.setItem('scanHistory', JSON.stringify(scanHistory.slice(0, 50)));
+                        addNotification(`Selected ${cardTitle} tool.`);
+                        window.location.href = `/${newPath}/index.html`;
+                    });
+                });
+            } else if (page.isTargetsPage) {
+                dynamicContent.innerHTML = generateTargetsHTML();
+                renderTargets();
+                document.getElementById('add-target-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const urlInput = document.getElementById('target-url-input');
+                    const newUrl = urlInput.value.trim();
+                    if (newUrl) {
+                        let targets = JSON.parse(localStorage.getItem('userTargets')) || [];
+                        if (!targets.includes(newUrl)) {
+                            targets.push(newUrl);
+                            localStorage.setItem('userTargets', JSON.stringify(targets));
+                            addNotification(`Added new target: ${newUrl}`);
+                            urlInput.value = '';
+                            renderTargets();
+                        } else {
+                            showMessage('Duplicate', 'This URL is already in your targets list.');
+                        }
+                    }
+                });
+                document.getElementById('delete-all-targets-btn').addEventListener('click', () => {
+                    localStorage.removeItem('userTargets');
+                    addNotification('All targets have been deleted.');
+                    renderTargets();
+                });
+            } else if (page.isHistoryPage) {
+                dynamicContent.innerHTML = generateHistoryHTML();
+                renderHistory();
+                document.getElementById('clear-history-btn').addEventListener('click', () => {
+                    localStorage.removeItem('scanHistory');
+                    addNotification('Scan history has been cleared.');
+                    renderHistory();
+                });
+            } else if (page.isSettings) {
+                 dynamicContent.innerHTML = `<div class="card">
+                    <div class="space-y-8">
+                        <div>
+                            <h3 class="text-2xl font-bold mb-4">Profile Settings</h3>
+                            <p class="text-sm text-gray-400 mb-4">This form is for demonstration purposes. Your display name will not be permanently changed.</p>
+                            <form id="profile-form" class="space-y-4">
+                                <div><label for="username" class="block text-sm font-medium">Update Display Name</label><input type="text" id="username" value="${currentUserName}" class="form-input mt-1 block"></div>
+                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl">Save Changes</button>
+                            </form>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold mb-4">Password Management</h3>
+                            <p class="text-sm text-gray-400 mb-4">This is a view-only form. The password cannot be changed from this interface.</p>
+                            <form id="password-form" class="space-y-4">
+                                <div><label for="current-password" class="block text-sm font-medium">Current Password</label><input type="password" id="current-password" class="form-input mt-1 block"></div>
+                                <div><label for="new-password" class="block text-sm font-medium">New Password</label><input type="password" id="new-password" class="form-input mt-1 block"></div>
+                                <div><label for="confirm-password" class="block text-sm font-medium">Confirm New Password</label><input type="password" id="confirm-password" class="form-input mt-1 block"></div>
+                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl">Change Password</button>
+                            </form>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold mb-4">Theme Settings</h3>
+                            <button id="theme-toggle-button" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-xl">Toggle Dark/Light Theme</button>
+                        </div>
+                    </div>
+                 </div>`;
+                document.getElementById('profile-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    showMessage('Success', 'Display name updated successfully!');
+                    addNotification("Attempted to update profile name.");
+                });
+                document.getElementById('password-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    showMessage('Success', 'Password changed successfully!');
+                    addNotification("Attempted to change password.");
+                    document.getElementById('password-form').reset();
+                });
+                document.getElementById('theme-toggle-button').addEventListener('click', () => {
+                    document.body.classList.toggle('light-theme');
+                    localStorage.setItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark');
+                    addNotification("Theme settings changed.");
+                });
+            } else {
+                 dynamicContent.innerHTML = `<div class="card"><h2 class="text-3xl font-bold text-white mb-4">${page.title}</h2><p class="text-gray-400 mb-6">${page.description}</p>${page.prevention || ''}</div>`;
+            }
+        }
+
+        function updateActiveSidebarButton(path) {
+            document.querySelectorAll('.sidebar-button').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.querySelector(`[data-path="${path}"]`);
+            if (activeBtn) { activeBtn.classList.add('active'); }
+        }
+
+        learnToggle.addEventListener('click', () => {
+            const isHidden = learnSubMenu.classList.toggle('hidden');
+            learnIcon.textContent = isHidden ? '▼' : '▲';
+            if (!isHidden) addNotification("Opened the Learn section.");
+            updateActiveSidebarButton('learn-overview');
+            renderContent('learn-overview');
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (!notificationPanel.classList.contains('hidden')) {
+                if (!notificationBell.contains(e.target) && !notificationPanel.contains(e.target)) {
+                    notificationPanel.classList.add('hidden');
+                }
+            }
+        });
+
+        sidebarNav.addEventListener('click', (e) => {
+            const button = e.target.closest('button');
+            if (!button || button.id === 'learn-toggle') return;
+            const path = button.dataset.path;
+            const pageTitle = pages[path] ? pages[path].title : button.textContent.trim();
+            if (path && path !== 'learn-overview' && pages[path]) {
+                addNotification(`Mapsd to ${pageTitle}.`);
+            }
+            updateActiveSidebarButton(path);
+            renderContent(path);
+        });
+        
+        logoutButton.addEventListener('click', () => {
+            confirmationModal.classList.remove('hidden');
+        });
+        document.getElementById('confirm-cancel-btn').addEventListener('click', () => {
+            confirmationModal.classList.add('hidden');
+        });
+        document.getElementById('confirm-action-btn').addEventListener('click', () => {
+            ['loggedIn', 'userName', 'theme', 'notifications', 'userTargets', 'scanHistory'].forEach(item => localStorage.removeItem(item));
+            sessionStorage.removeItem('welcomed');
+            window.location.href = '/scanner/index.html';
+        });
+
+        if (localStorage.getItem('theme') === 'light') { document.body.classList.add('light-theme'); }
+        
+        if (!sessionStorage.getItem('welcomed')) {
+             addNotification(`Welcome back, ${currentUserName}!`);
+             sessionStorage.setItem('welcomed', 'true');
+        }
+        
+        updateNotificationBadge();
+        renderContent('dashboard-overview');
+    });
+</script>
 </body>
 </html>
+
