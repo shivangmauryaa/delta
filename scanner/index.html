@@ -5,12 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Delta Login</title>
   <style>
+    /* Font Import */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
     /* Reset */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Inter', sans-serif;
     }
 
     body {
@@ -20,7 +23,20 @@
       align-items: center;
       background: linear-gradient(135deg, #0a0f1e, #111827, #1e293b);
       background-size: 300% 300%;
-      animation: gradientShift 12s ease infinite;
+      animation: gradientShift 15s ease infinite;
+      overflow: hidden; /* Prevent scrollbars from the background pattern */
+    }
+
+    /* --- ADDITION: Animated Background Pattern --- */
+    .background-pattern {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239CA3AF' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        animation: gradientShift 15s ease infinite;
+        z-index: -1;
     }
 
     @keyframes gradientShift {
@@ -30,106 +46,173 @@
     }
 
     .login-container {
-      width: 380px;
+      width: 400px;
       padding: 40px;
       border-radius: 20px;
-      backdrop-filter: blur(18px) saturate(180%);
-      -webkit-backdrop-filter: blur(18px) saturate(180%);
-      background: rgba(30, 41, 59, 0.9); /* darker glass effect */
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      background: rgba(30, 41, 59, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.125);
       text-align: center;
       color: #fff;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-      animation: fadeIn 1.2s ease;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+      animation: fadeIn 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      z-index: 10;
+    }
+    
+    /* --- ADDITION: Shake animation for errors --- */
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        50% { transform: translateX(5px); }
+        75% { transform: translateX(-5px); }
+    }
+    
+    .shake {
+        animation: shake 0.4s ease-in-out;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translateY(25px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    .login-container h1 {
-      font-size: 2rem;
-      margin-bottom: 10px;
-      letter-spacing: 2px;
+    .logo-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 10px;
+    }
+
+    .logo-container h1 {
+      font-size: 2.2rem;
+      letter-spacing: 1px;
       font-weight: 700;
       color: #38bdf8;
     }
 
     .login-container p {
-      font-size: 0.9rem;
+      font-size: 1rem;
       margin-bottom: 30px;
       color: #cbd5e1;
     }
 
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: 22px;
       text-align: left;
+      position: relative; /* Needed for password toggle */
     }
 
     .form-group label {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: #e2e8f0;
       display: block;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     .form-group input {
       width: 100%;
-      padding: 12px 15px;
+      padding: 14px 18px;
       border-radius: 10px;
-      border: none;
+      border: 1px solid transparent;
       outline: none;
       font-size: 1rem;
       background: rgba(255,255,255,0.08);
       color: #fff;
-      transition: 0.3s;
+      transition: all 0.3s;
+    }
+    
+    /* --- IMPROVEMENT: Better focus state --- */
+    .form-group input:focus {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(56, 189, 248, 0.5);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
     }
 
-    .form-group input:focus {
-      background: rgba(255,255,255,0.15);
-      box-shadow: 0 0 8px #38bdf8;
+    /* --- ADDITION: Password visibility toggle --- */
+    .password-toggle {
+        position: absolute;
+        right: 15px;
+        top: 42px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #94a3b8;
+        transition: color 0.2s;
+    }
+    .password-toggle:hover {
+        color: #e2e8f0;
     }
 
     .login-btn {
       width: 100%;
-      padding: 14px;
+      padding: 15px;
       border: none;
       border-radius: 12px;
-      font-size: 1rem;
+      font-size: 1.1rem;
       font-weight: bold;
       background: linear-gradient(135deg, #0ea5e9, #2563eb);
       color: #fff;
       cursor: pointer;
-      transition: 0.3s ease-in-out;
+      transition: all 0.3s ease-in-out;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
     }
 
     .login-btn:hover {
       background: linear-gradient(135deg, #2563eb, #0ea5e9);
-      transform: translateY(-2px);
+      transform: translateY(-3px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    /* --- ADDITION: Spinner for loading state --- */
+    .spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        display: none;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
     }
 
     .error-message {
       margin-top: 15px;
-      padding: 10px;
+      padding: 12px;
       border-radius: 8px;
-      font-size: 0.85rem;
-      color: #f87171;
-      background: rgba(239, 68, 68, 0.15);
+      font-size: 0.9rem;
+      color: #fca5a5;
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.3);
       display: none;
       text-align: center;
     }
 
     .footer-text {
-      margin-top: 25px;
-      font-size: 0.8rem;
+      margin-top: 30px;
+      font-size: 0.85rem;
       color: #94a3b8;
     }
   </style>
 </head>
 <body>
-  <div class="login-container">
-    <h1>Δ Delta</h1>
+  <div class="background-pattern"></div>
+  <div class="login-container" id="login-container">
+    <div class="logo-container">
+        <!-- ADDITION: SVG Logo -->
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L2 12L12 22L22 12L12 2Z" stroke="#38bdf8" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M12 22V12L2 12" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h1>Delta</h1>
+    </div>
     <p>Welcome to the Delta Security Portal</p>
     <form id="loginForm">
       <div class="form-group">
@@ -139,33 +222,78 @@
       <div class="form-group">
         <label for="password">Password</label>
         <input type="password" id="password" placeholder="Enter your password" required>
+        <!-- ADDITION: Password toggle button -->
+        <button type="button" class="password-toggle" id="togglePassword">
+            <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+        </button>
       </div>
-      <button type="submit" class="login-btn">Login</button>
-      <div id="error" class="error-message">❌ Invalid username or password</div>
+      <button type="submit" class="login-btn" id="login-btn">
+        <span id="btn-text">Login</span>
+        <div class="spinner" id="spinner"></div>
+      </button>
+      <div id="error" class="error-message">Invalid username or password</div>
     </form>
     <div class="footer-text">© 2025 Team Delta. All rights reserved.</div>
   </div>
 
   <script>
-    document.getElementById("loginForm").addEventListener("submit", function(e) {
+    const loginForm = document.getElementById("loginForm");
+    const loginContainer = document.getElementById("login-container");
+    const errorBox = document.getElementById("error");
+    const loginBtn = document.getElementById("login-btn");
+    const btnText = document.getElementById("btn-text");
+    const spinner = document.getElementById("spinner");
+    const togglePassword = document.getElementById("togglePassword");
+    const passwordInput = document.getElementById("password");
+    const eyeIcon = document.getElementById("eye-icon");
+
+    loginForm.addEventListener("submit", function(e) {
       e.preventDefault();
       const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
-      const errorBox = document.getElementById("error");
+      const password = passwordInput.value;
 
-      // Demo credentials (replace with real auth later)
-      if (username === "admin" && password === "password") {
+      // --- IMPROVEMENT: Show loading state ---
+      errorBox.style.display = "none";
+      loginContainer.classList.remove("shake");
+      loginBtn.disabled = true;
+      btnText.style.display = "none";
+      spinner.style.display = "block";
+
+      // Simulate a network request
+      setTimeout(() => {
+        if (username === "admin" && password === "password") {
+          localStorage.setItem('loggedIn', 'true');
+          localStorage.setItem('userName', username);
+          window.location.href = "dashboard.html";
+        } else {
+          // --- IMPROVEMENT: Shake animation on error ---
+          errorBox.style.display = "block";
+          loginContainer.classList.add("shake");
+          
+          // Reset button state
+          loginBtn.disabled = false;
+          btnText.style.display = "block";
+          spinner.style.display = "none";
+
+          // Remove shake class after animation so it can trigger again
+          setTimeout(() => {
+            loginContainer.classList.remove("shake");
+          }, 400);
+        }
+      }, 1000); // 1-second delay to show the spinner
+    });
+
+    // --- ADDITION: Password visibility toggle logic ---
+    togglePassword.addEventListener("click", function() {
+        const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+        passwordInput.setAttribute("type", type);
         
-        // FIX: Set the session flags BEFORE redirecting
-        localStorage.setItem('loggedIn', 'true');
-        localStorage.setItem('userName', username);
-        
-        // Now redirect to the dashboard
-        window.location.href = "dashboard.html";
-        
-      } else {
-        errorBox.style.display = "block";
-      }
+        // Change the eye icon
+        if (type === "password") {
+            eyeIcon.innerHTML = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>`;
+        } else {
+            eyeIcon.innerHTML = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>`;
+        }
     });
   </script>
 </body>
