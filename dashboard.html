@@ -174,7 +174,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
             if (!isLoggedIn) {
-                window.location.href = '/index.html';
+                window.location.href = '/scanner/index.html'; // Also update here for unauthenticated users
                 return;
             }
 
@@ -282,7 +282,7 @@
                     content: `
                         <div class="space-y-8">
                             <div>
-                                <h3 class="text-2xl font-bold mb-4">Profile Settings</h3>  <h3>Under Testing</h2>
+                                <h3 class="text-2xl font-bold mb-4">Profile Settings</h3>
                                 <form id="profile-form" class="space-y-4">
                                     <div>
                                         <label for="username" class="block text-sm font-medium">Update Display Name</label>
@@ -340,7 +340,7 @@
                 if (['xss', 'sql-injection', 'open-redirect', 'subdomain-finder', 'assets-discovery'].includes(path)) {
                     learnSubMenu.classList.remove('hidden');
                     learnIcon.textContent = '▲';
-                } else {
+                } else if (path !== 'learn-overview') {
                     learnSubMenu.classList.add('hidden');
                     learnIcon.textContent = '▼';
                 }
@@ -371,9 +371,6 @@
                         e.preventDefault();
                         const newName = document.getElementById('username').value;
                         if (newName.trim() !== '') {
-                            // MODIFIED: The following lines were removed to prevent saving the username
-                            // localStorage.setItem('userName', newName);
-                            // welcomeUser.textContent = `Welcome, ${newName}`;
                             showMessage('Success', 'Display name updated successfully!');
                         } else {
                             showMessage('Error', 'Display name cannot be empty.');
@@ -382,8 +379,6 @@
 
                     document.getElementById('password-form').addEventListener('submit', (e) => {
                         e.preventDefault();
-                        // MODIFIED: All validation logic was removed to make this view-only.
-                        // It will now always show success.
                         showMessage('Success', 'Password changed successfully!');
                         document.getElementById('password-form').reset();
                     });
@@ -421,17 +416,21 @@
             });
 
             sidebarNav.addEventListener('click', (e) => {
-                if (e.target.tagName === 'BUTTON') {
-                    const path = e.target.dataset.path;
-                    updateActiveSidebarButton(path);
-                    renderContent(path);
-                }
+                const button = e.target.closest('button');
+                if (!button) return;
+
+                if(button.id === 'learn-toggle') return;
+
+                const path = button.dataset.path;
+                updateActiveSidebarButton(path);
+                renderContent(path);
             });
 
             logoutButton.addEventListener('click', () => {
                 localStorage.removeItem('loggedIn');
                 localStorage.removeItem('userName');
                 localStorage.removeItem('theme');
+                // *** THIS LINE IS NOW MODIFIED ***
                 window.location.href = '/scanner/index.html';
             });
 
