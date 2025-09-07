@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Delta - Open Redirect Scanner</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -10,157 +10,189 @@
     .sidebar { width: 80px; background-color: #1e293b; padding: 1.5rem 0; border-right: 2px solid #334155; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; flex-shrink: 0; }
     .sidebar-logo { width: 40px; height: 40px; }
     .content-area { flex-grow: 1; padding: 2rem; }
-    .card { background-color: #1e293b; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); }
-    .form-input { width: 100%; padding: 0.75rem 1rem; border-radius: 0.5rem; background-color: #334155; border: 1px solid #475569; color: #e2e8f0; }
-    .form-input:focus { outline: none; border-color: #0ea5e9; }
-    .scan-button { background-color: #0ea5e9; color: white; font-weight: 600; padding: 0.75rem 1.5rem; border-radius: 0.5rem; }
-    .scan-button:hover { background-color: #0284c7; }
-    .results-area { background-color: #0f172a; border: 1px solid #334155; border-radius: 0.5rem; padding: 1rem; min-height: 200px; }
+    .card { background-color: rgba(30,41,59,1); border-radius: 1rem; padding: 1.25rem; box-shadow: 0 6px 20px rgba(2,6,23,0.6); }
+    .form-input { width: 100%; padding: 0.75rem 1rem 0.75rem 2.75rem; border-radius: 0.5rem; background-color: #0b1220; border: 1px solid #263143; color: #e2e8f0; }
+    .form-input:focus { outline: none; border-color: #0ea5e9; box-shadow: 0 0 0 4px rgba(14,165,233,0.06); }
+    .scan-button { background: linear-gradient(135deg, #06b6d4, #0ea5e9); color: white; font-weight: 700; padding: 0.75rem 1.25rem; border-radius: 0.5rem; display: inline-flex; gap: 0.5rem; align-items: center; justify-content: center; }
+    .scan-button:hover { transform: translateY(-2px); }
+    .results-area { margin-top: 1rem; background-color: #071022; border: 1px solid #10202b; border-radius: 0.75rem; padding: 1rem; min-height: 220px; }
+    .payload-row { display:flex; gap:1rem; align-items:flex-start; padding:0.75rem; border-radius:0.5rem; margin-top:0.5rem; border:1px solid transparent; }
+    .payload-row.safe { background:#04221a; border-color:#064e3b; color:#7ee7c9; }
+    .payload-row.vuln { background:#2b0b0b; border-color:#7f1d1d; color:#fca5a5; }
+    .payload-row.warn { background:#2b1a0b; border-color:#92400e; color:#ffd29b; }
+    .small-meta { font-size:0.82rem; color:#94a3b8; }
+    .input-icon { position:absolute; left:1rem; top:3.9rem; color:#6b7280; pointer-events:none; }
+    .select { width:100%; padding:0.6rem 1rem; border-radius:0.5rem; background:#0b1220; border:1px solid #263143; color:#e2e8f0; }
   </style>
 </head>
 <body class="flex min-h-screen">
-
-  <!-- Sidebar -->
   <aside class="sidebar">
-    <a href="/scanner/dashboard.html" title="Back to Dashboard">
-      <img src="https://t3.ftcdn.net/jpg/01/68/62/98/360_F_168629858_n3Lw3i71XzIlwCtVNmeOiJhvI3Wa44Ni.jpg" alt="Delta Logo" class="sidebar-logo">
+    <a href="/scanner/dashboard.html" title="Dashboard">
+      <img src="https://t3.ftcdn.net/jpg/01/68/62/98/360_F_168629858_n3Lw3i71XzIlwCtVNmeOiJhvI3Wa44Ni.jpg" class="sidebar-logo" alt="Delta Logo">
     </a>
+    <a href="/scanner/dashboard.html" title="Dashboard" class="text-slate-400 hover:text-cyan-400">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7m-9 2v8m0-8H5a2 2 0 00-2 2v8h6v-8zm8 0h2a2 2 0 012 2v8h-6v-8z"/></svg>
+    </a>
+
   </aside>
 
-  <!-- Main Content -->
   <main class="content-area">
-    <header class="flex items-center justify-between mb-8 pb-4 border-b-2 border-slate-700">
+    <header class="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
       <h1 class="text-3xl font-bold">Open Redirect Scanner</h1>
-      <a href="/scanner/dashboard.html" class="bg-slate-600 hover:bg-slate-700 text-white font-semibold py-2 px-4 rounded-xl transition-colors">Back to Dashboard</a>
+      <a href="/scanner/dashboard.html" class="text-slate-300 hover:text-white">Back to Dashboard</a>
     </header>
 
-    <!-- Input Card -->
     <div class="card">
-      <!-- Manual Input -->
-      <div class="mb-4">
-        <label for="urlInput" class="block text-lg font-medium text-slate-300 mb-2">Target URL (with parameter)</label>
-        <input type="url" id="urlInput" placeholder="http://example.com/logout?r=" class="form-input">
-        <p class="text-xs text-slate-500 mt-2">Enter the full URL including the parameter (e.g., ?r=, ?redirect=).</p>
+      <div class="relative">
+        <label class="block text-slate-300 mb-2">Target URL (with parameter)</label>
+        <input id="urlInput" class="form-input" placeholder="http://example.com/logout?r=" />
       </div>
 
-      <!-- Select from Targets -->
-      <div class="mb-4">
-        <label for="targetSelect" class="block text-lg font-medium text-slate-300 mb-2">Or select from saved Targets</label>
-        <select id="targetSelect" class="form-input">
-          <option value="">-- Select a target --</option>
+      <div class="mt-4">
+        <label class="block text-slate-300 mb-2">Saved Targets</label>
+        <select id="targetSelect" class="select">
+          <option value="">-- Select saved target --</option>
         </select>
       </div>
 
-      <button id="scanBtn" class="scan-button w-full mt-2">Run Payload Tests</button>
-    </div>
+      <div class="mt-4 flex gap-3">
+        <button id="scanBtn" class="scan-button"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-width="1.5" d="M12 4v16m8-8H4"/></svg> Run Payload Tests</button>
+        <button id="saveTargetBtn" class="px-4 py-2 rounded bg-slate-700 hover:bg-slate-600 text-slate-200">Save Target</button>
+      </div>
 
-    <!-- Results -->
-    <div class="mt-8">
-      <h2 class="text-2xl font-semibold text-slate-200 mb-3">Scan Results</h2>
-      <div id="results" class="results-area card">
-        <p class="text-slate-500">Results will be displayed here...</p>
+      <div id="results" class="results-area">
+        <p class="small-meta">Results will appear below after running tests.</p>
       </div>
     </div>
   </main>
 
   <script>
-    const urlInput = document.getElementById('urlInput');
-    const targetSelect = document.getElementById('targetSelect');
-    const scanBtn = document.getElementById('scanBtn');
-    const resultsDiv = document.getElementById('results');
-
-    // Payloads
-    const payloads = [
-      "//evil.com", "/@evil.com", "https://evil.com", "http://evil.com",
-      "////evil.com", "///evil.com", "http:evil.com", "https:evil.com",
-      "//google.com", "/redirect?url=//evil.com", "/?next=//evil.com"
+    // ------- Config -------
+    const API = "http://127.0.0.1:5000/api/open-redirect";
+    const PAYLOADS = [
+      "//evil.com",
+      "/@evil.com",
+      "https://evil.com",
+      "http://evil.com",
+      "////evil.com",
+      "///evil.com",
+      "http:evil.com",
+      "https:evil.com",
+      "//google.com",
+      "/redirect?url=//evil.com",
+      "/?next=//evil.com"
     ];
 
-    // Load saved targets from localStorage
-    function loadTargets() {
+    // ------- Elements -------
+    const urlInput = document.getElementById("urlInput");
+    const targetSelect = document.getElementById("targetSelect");
+    const scanBtn = document.getElementById("scanBtn");
+    const resultsDiv = document.getElementById("results");
+    const saveTargetBtn = document.getElementById("saveTargetBtn");
+
+    // Load saved targets from localStorage into dropdown
+    function loadTargetsToSelect() {
       const targets = JSON.parse(localStorage.getItem("userTargets")) || [];
-      targetSelect.innerHTML = `<option value="">-- Select a target --</option>`;
-      targets.forEach(t => {
+      targetSelect.innerHTML = `<option value="">-- Select saved target --</option>`;
+      for (const t of targets) {
         const opt = document.createElement("option");
         opt.value = t;
         opt.textContent = t;
         targetSelect.appendChild(opt);
-      });
+      }
     }
 
-    // Auto-fill URL input when target selected
+    // Save current url to targets
+    saveTargetBtn.addEventListener("click", () => {
+      const val = urlInput.value.trim();
+      if (!val) { alert("Enter URL first"); return; }
+      let targets = JSON.parse(localStorage.getItem("userTargets")) || [];
+      if (!targets.includes(val)) {
+        targets.unshift(val);
+        localStorage.setItem("userTargets", JSON.stringify(targets.slice(0, 200)));
+        loadTargetsToSelect();
+        alert("Saved target!");
+      } else {
+        alert("Target already saved.");
+      }
+    });
+
+    // When selecting a target, fill the input
     targetSelect.addEventListener("change", (e) => {
-      if (e.target.value) {
-        urlInput.value = e.target.value;
-      }
+      if (e.target.value) urlInput.value = e.target.value;
     });
 
-    // Run payload tests
-    scanBtn.addEventListener('click', async () => {
-      const baseUrl = urlInput.value.trim();
-      if (!baseUrl.includes('=')) {
-        showError("The Target URL must include a parameter (e.g., 'redirect=').");
-        return;
-      }
+    // Main scan flow: send base URL to backend, backend runs payloads
+    scanBtn.addEventListener("click", async () => {
+      const base = urlInput.value.trim();
+      if (!base) { alert("Please enter a URL (e.g., http://site.com/logout?r=)"); return; }
 
-      resultsDiv.innerHTML = `<p class="text-slate-400">Running tests with ${payloads.length} payloads...</p>`;
-      for (const payload of payloads) {
-        const testUrl = baseUrl + payload;
-        await runTest(testUrl, payload);
-      }
-    });
+      resultsDiv.innerHTML = `<p class="small-meta">Scanning ${base} — this may take a few seconds...</p>`;
 
-    async function runTest(testUrl, payload) {
       try {
-        const response = await fetch("http://127.0.0.1:5000/api/open-redirect", {
+        const res = await fetch(API, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url: testUrl })
+          body: JSON.stringify({ url: base, payloads: PAYLOADS })
         });
-
-        const data = await response.json();
-        appendResult(testUrl, payload, data);
+        const json = await res.json();
+        if (json.error) {
+          resultsDiv.innerHTML = `<div class="payload-row warn"><div><strong>Error</strong></div><div class="small-meta">${json.error}</div></div>`;
+          return;
+        }
+        renderResults(json.results || []);
       } catch (err) {
-        appendError(testUrl, payload);
+        resultsDiv.innerHTML = `<div class="payload-row warn"><div><strong>Network / Backend error</strong></div><div class="small-meta">${err.message}</div></div>`;
+      }
+    });
+
+    // Render results grouped by payload (backend returns entries per tested_url)
+    function renderResults(entries) {
+      // group by payload
+      const grouped = {};
+      for (const e of entries) {
+        const p = e.payload || "(unknown)";
+        grouped[p] = grouped[p] || [];
+        grouped[p].push(e);
+      }
+
+      resultsDiv.innerHTML = "";
+      for (const payload of Object.keys(grouped)) {
+        const rows = grouped[payload];
+        // If any row is Vulnerable -> payload-level status vulnerable
+        const anyVuln = rows.some(r => r.status === "Vulnerable");
+        const anyRedirect = rows.some(r => r.status && r.status.startsWith("Redirect"));
+        const anyPossible = rows.some(r => r.status && r.status.startsWith("Possible"));
+        const statusClass = anyVuln ? "vuln" : (anyPossible || anyRedirect ? "warn" : "safe");
+        const container = document.createElement("div");
+        container.className = `payload-row ${statusClass}`;
+        let inner = `<div style="flex:1">
+                       <div style="display:flex; gap:0.5rem; align-items:center;">
+                         <strong>${payload}</strong>
+                         <span class="small-meta"> — ${anyVuln ? 'VULNERABLE' : anyPossible ? 'POSSIBLE' : anyRedirect ? 'INTERNAL REDIRECT' : 'NO REDIRECT'}</span>
+                       </div>`;
+
+        // show each tested_url detail
+        for (const r of rows) {
+          inner += `<div class="small-meta" style="margin-top:6px; padding-left:6px;">
+                      <div><code style="color:inherit">${escapeHtml(r.tested_url)}</code></div>
+                      <div>status: ${r.status || 'Unknown'} ${r.status_code ? `| HTTP ${r.status_code}` : ''} ${r.location ? `| Location: <a href="${escapeHtml(r.location)}" target="_blank" style="color:#9be7ff">${escapeHtml(r.location)}</a>` : ''}</div>
+                    </div>`;
+        }
+
+        inner += `</div>`;
+        container.innerHTML = inner;
+        resultsDiv.appendChild(container);
       }
     }
 
-    // UI functions
-    function appendResult(url, payload, data) {
-      const div = document.createElement("div");
-      div.className = data.error || data.status?.includes("Error")
-        ? "p-3 bg-yellow-900/50 text-yellow-300 rounded-md border border-yellow-700 mt-2"
-        : data.status === "Possible Redirect"
-        ? "p-3 bg-red-900/50 text-red-300 rounded-md border border-red-700 mt-2"
-        : "p-3 bg-green-900/50 text-green-300 rounded-md border border-green-700 mt-2";
-
-      div.innerHTML = `
-        <p><b>Payload:</b> <code class="bg-slate-800 px-1 rounded">${escapeHtml(payload)}</code></p>
-        <p><b>Status:</b> ${data.status || data.error || "Unknown"}</p>
-        <p class="break-all text-xs mt-1"><b>Tested URL:</b> ${escapeHtml(url)}</p>`;
-      resultsDiv.appendChild(div);
+    function escapeHtml(s) {
+      if (!s) return "";
+      return s.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
     }
 
-    function appendError(url, payload) {
-      const div = document.createElement('div');
-      div.className = "p-3 bg-yellow-900/50 text-yellow-300 rounded-md border border-yellow-700 mt-2";
-      div.innerHTML = `
-        <p><b>Payload:</b> ${escapeHtml(payload)}</p>
-        <p>⚠️ Backend not reachable.</p>
-        <p class="break-all text-xs mt-1"><b>Tested URL:</b> ${escapeHtml(url)}</p>`;
-      resultsDiv.appendChild(div);
-    }
-
-    function showError(message) {
-      resultsDiv.innerHTML = `<div class="p-4 bg-red-900/50 text-red-300 rounded-md border border-red-700"><p><b>Error:</b> ${message}</p></div>`;
-    }
-
-    function escapeHtml(unsafe) {
-      return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-    }
-
-    // Load targets when page loads
-    loadTargets();
+    // initial load
+    loadTargetsToSelect();
   </script>
 </body>
 </html>
