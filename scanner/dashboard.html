@@ -343,11 +343,12 @@
         };
 
         const dashboardCards = [
-            { path: 'xss', title: 'XSS Scanner', description: 'Detect reflected and stored XSS vulnerabilities.' },
-            { path: 'sql-injection', title: 'SQL Injection', description: 'Test parameters for SQL injection flaws.' },
-            { path: 'open-redirect', title: 'Open Redirect', description: 'Identify and verify open redirect issues.' },
-            { path: 'subdomain-finder', title: 'Subdomain Finder', description: 'Enumerate subdomains and hidden assets.' },
-            { path: 'assets-discovery', title: 'Asset Discovery', description: 'Map application endpoints and directories.' },
+             { path: '/delta/xss', title: 'XSS Scanner', description: 'Detect reflected and stored XSS vulnerabilities.' },
+            { path: '/delta/sql-injection', title: 'SQL Injection', description: 'Test parameters for SQL injection flaws.' },
+            { path: '/delta/open-redirect', title: 'Open Redirect', description: 'Identify and verify open redirect issues.' },
+            { path: '/delta/subdomain-finder', title: 'Subdomain Finder', description: 'Enumerate subdomains and hidden assets.' },
+            { path: '/delta/assets-discovery', title: 'Asset Discovery', description: 'Map application endpoints and directories.' },
+            { path: '/delta/passive', title: 'Passive Links', description: 'Find Older and Archieved links.' },
         ];
 
         function renderContent(path) {
@@ -372,7 +373,7 @@
                         scanHistory.unshift({ tool: cardTitle, date: new Date().toLocaleString() });
                         localStorage.setItem('scanHistory', JSON.stringify(scanHistory.slice(0, 50)));
                         addNotification(`Selected ${cardTitle} tool.`);
-                        window.location.href = `/${newPath}/index.html`;
+                        window.location.href = `/scanner/${newPath}/index.html`;
                     });
                 });
             } else if (page.isTargetsPage) {
@@ -515,4 +516,3 @@
 </script>
 </body>
 </html>
-
