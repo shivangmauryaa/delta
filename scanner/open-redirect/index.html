@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delta - Open Redirect Scanner</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #e2e8f0; }
+    .sidebar { width: 80px; background-color: #1e293b; padding: 1.5rem 0; border-right: 2px solid #334155; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; flex-shrink: 0; }
+    .sidebar-logo { width: 40px; height: 40px; }
+    .content-area { flex-grow: 1; padding: 2rem; }
+    .card { background-color: #1e293b; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); }
+    .form-input { width: 100%; padding: 0.75rem 1rem; border-radius: 0.5rem; background-color: #334155; border: 1px solid #475569; color: #e2e8f0; }
+    .form-input:focus { outline: none; border-color: #0ea5e9; }
+    .scan-button { background-color: #0ea5e9; color: white; font-weight: 600; padding: 0.75rem 1.5rem; border-radius: 0.5rem; }
+    .scan-button:hover { background-color: #0284c7; }
+    .results-area { background-color: #0f172a; border: 1px solid #334155; border-radius: 0.5rem; padding: 1rem; min-height: 200px; }
+  </style>
+</head>
+<body class="flex min-h-screen">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <a href="/scanner/dashboard.html" title="Back to Dashboard">
+      <img src="https://t3.ftcdn.net/jpg/01/68/62/98/360_F_168629858_n3Lw3i71XzIlwCtVNmeOiJhvI3Wa44Ni.jpg" alt="Delta Logo" class="sidebar-logo">
+    </a>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="content-area">
+    <header class="flex items-center justify-between mb-8 pb-4 border-b-2 border-slate-700">
+      <h1 class="text-3xl font-bold">Open Redirect Scanner</h1>
+      <a href="/scanner/dashboard.html" class="bg-slate-600 hover:bg-slate-700 text-white font-semibold py-2 px-4 rounded-xl transition-colors">Back to Dashboard</a>
+    </header>
+
+    <!-- Input Card -->
+    <div class="card">
+      <!-- Manual Input -->
+      <div class="mb-4">
+        <label for="urlInput" class="block text-lg font-medium text-slate-300 mb-2">Target URL (with parameter)</label>
+        <input type="url" id="urlInput" placeholder="http://example.com/logout?r=" class="form-input">
+        <p class="text-xs text-slate-500 mt-2">Enter the full URL including the parameter (e.g., ?r=, ?redirect=).</p>
+      </div>
+
+      <!-- Select from Targets -->
+      <div class="mb-4">
+        <label for="targetSelect" class="block text-lg font-medium text-slate-300 mb-2">Or select from saved Targets</label>
+        <select id="targetSelect" class="form-input">
+          <option value="">-- Select a target --</option>
+        </select>
+      </div>
+
+      <button id="scanBtn" class="scan-button w-full mt-2">Run Payload Tests</button>
+    </div>
+
+    <!-- Results -->
+    <div class="mt-8">
+      <h2 class="text-2xl font-semibold text-slate-200 mb-3">Scan Results</h2>
+      <div id="results" class="results-area card">
+        <p class="text-slate-500">Results will be displayed here...</p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const urlInput = document.getElementById('urlInput');
+    const targetSelect = document.getElementById('targetSelect');
+    const scanBtn = document.getElementById('scanBtn');
+    const resultsDiv = document.getElementById('results');
+
+    // Payloads
+    const payloads = [
+      "//evil.com", "/@evil.com", "https://evil.com", "http://evil.com",
+      "////evil.com", "///evil.com", "http:evil.com", "https:evil.com",
+      "//google.com", "/redirect?url=//evil.com", "/?next=//evil.com"
+    ];
+
+    // Load saved targets from localStorage
+    function loadTargets() {
+      const targets = JSON.parse(localStorage.getItem("userTargets")) || [];
+      targetSelect.innerHTML = `<option value="">-- Select a target --</option>`;
+      targets.forEach(t => {
+        const opt = document.createElement("option");
+        opt.value = t;
+        opt.textContent = t;
+        targetSelect.appendChild(opt);
+      });
+    }
+
+    // Auto-fill URL input when target selected
+    targetSelect.addEventListener("change", (e) => {
+      if (e.target.value) {
+        urlInput.value = e.target.value;
+      }
+    });
+
+    // Run payload tests
+    scanBtn.addEventListener('click', async () => {
+      const baseUrl = urlInput.value.trim();
+      if (!baseUrl.includes('=')) {
+        showError("The Target URL must include a parameter (e.g., 'redirect=').");
+        return;
+      }
+
+      resultsDiv.innerHTML = `<p class="text-slate-400">Running tests with ${payloads.length} payloads...</p>`;
+      for (const payload of payloads) {
+        const testUrl = baseUrl + payload;
+        await runTest(testUrl, payload);
+      }
+    });
+
+    async function runTest(testUrl, payload) {
+      try {
+        const response = await fetch("http://127.0.0.1:5000/api/open-redirect", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url: testUrl })
+        });
+
+        const data = await response.json();
+        appendResult(testUrl, payload, data);
+      } catch (err) {
+        appendError(testUrl, payload);
+      }
+    }
+
+    // UI functions
+    function appendResult(url, payload, data) {
+      const div = document.createElement("div");
+      div.className = data.error || data.status?.includes("Error")
+        ? "p-3 bg-yellow-900/50 text-yellow-300 rounded-md border border-yellow-700 mt-2"
+        : data.status === "Possible Redirect"
+        ? "p-3 bg-red-900/50 text-red-300 rounded-md border border-red-700 mt-2"
+        : "p-3 bg-green-900/50 text-green-300 rounded-md border border-green-700 mt-2";
+
+      div.innerHTML = `
+        <p><b>Payload:</b> <code class="bg-slate-800 px-1 rounded">${escapeHtml(payload)}</code></p>
+        <p><b>Status:</b> ${data.status || data.error || "Unknown"}</p>
+        <p class="break-all text-xs mt-1"><b>Tested URL:</b> ${escapeHtml(url)}</p>`;
+      resultsDiv.appendChild(div);
+    }
+
+    function appendError(url, payload) {
+      const div = document.createElement('div');
+      div.className = "p-3 bg-yellow-900/50 text-yellow-300 rounded-md border border-yellow-700 mt-2";
+      div.innerHTML = `
+        <p><b>Payload:</b> ${escapeHtml(payload)}</p>
+        <p>⚠️ Backend not reachable.</p>
+        <p class="break-all text-xs mt-1"><b>Tested URL:</b> ${escapeHtml(url)}</p>`;
+      resultsDiv.appendChild(div);
+    }
+
+    function showError(message) {
+      resultsDiv.innerHTML = `<div class="p-4 bg-red-900/50 text-red-300 rounded-md border border-red-700"><p><b>Error:</b> ${message}</p></div>`;
+    }
+
+    function escapeHtml(unsafe) {
+      return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+
+    // Load targets when page loads
+    loadTargets();
+  </script>
+</body>
+</html>
