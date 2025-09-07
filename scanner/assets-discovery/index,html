@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Delta - Asset Discovery</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Inter', sans-serif; background: #0f172a; color: #e2e8f0; }
+  .sidebar { width: 80px; background: #1e293b; padding: 1.5rem 0; border-right: 2px solid #334155; display:flex;flex-direction:column;align-items:center;gap:1.5rem;flex-shrink:0; }
+  .sidebar-logo { width:40px;height:40px;border-radius:0.5rem; }
+  .content-area { flex-grow:1;padding:2rem 3rem; }
+  .card { background:#1e293b;border-radius:1rem;padding:2rem;box-shadow:0 4px 10px rgba(0,0,0,0.2); }
+  .form-input { width:100%; padding:.75rem 1rem; border-radius:.5rem; background:#334155; border:1px solid #475569; color:#e2e8f0; }
+  .btn { font-weight:600; padding:.75rem 1.25rem; border-radius:.5rem; display:inline-flex; align-items:center; justify-content:center; gap:.5rem; cursor:pointer; }
+  .btn-primary { background:#0ea5e9; color:white; }
+  .btn-secondary { background:#475569; color:white; }
+  .results-area { background:#152238; border-radius:1rem; min-height:50vh; max-height:70vh; overflow:auto; padding:1rem; }
+  .tab { display:flex; gap:.5rem; margin-bottom:1rem; }
+  .tab button { padding:.5rem .75rem; border-radius:.5rem; background:transparent; color:#cbd5e1; border:1px solid transparent; }
+  .tab button.active { background:#0ea5e9; color:#041024; border-color:#0ea5e9; }
+  .spinner { width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;display:inline-block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .copy-btn { background:#065f46; color:white; padding:.35rem .6rem; border-radius:.4rem; font-size:.875rem; }
+  .section-title { font-weight:600; color:#cbd5e1; margin-bottom:.5rem; }
+  a.link { color:#7dd3fc; text-decoration:none; }
+</style>
+</head>
+<body class="flex min-h-screen">
+  <aside class="sidebar">
+    <img src="https://t3.ftcdn.net/jpg/01/68/62/98/360_F_168629858_n3Lw3i71XzIlwCtVNmeOiJhvI3Wa44Ni.jpg" class="sidebar-logo" alt="Delta">
+    <div class="text-xs text-slate-400">DELTA</div>
+  </aside>
+
+  <main class="content-area w-full">
+    <header class="flex items-center justify-between mb-6 pb-4 border-b border-slate-700">
+      <div>
+        <h1 class="text-3xl font-bold">Asset Discovery</h1>
+        <p class="text-slate-400 mt-1">Subdomains, DNS, IPs/ASN, ports, tech hints, wayback and JS assets.</p>
+      </div>
+      <div class="flex gap-3">
+        <input id="vtKey" placeholder="VirusTotal API (optional)" class="form-input" style="width:260px" />
+      </div>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="lg:col-span-1">
+        <div class="card">
+          <label class="block text-lg mb-2">Target Domain</label>
+          <input id="domain" class="form-input" placeholder="example.com" />
+          <div class="mt-4 flex gap-3">
+            <button id="scanBtn" class="btn btn-primary w-full">Run Scan</button>
+            <button id="stopBtn" class="btn btn-secondary hidden">Stop</button>
+          </div>
+          <div class="mt-3 flex gap-2">
+            <button id="exportJson" class="btn btn-secondary w-full">Export JSON</button>
+            <button id="copyAll" class="btn btn-secondary w-full">Copy All</button>
+          </div>
+          <p class="text-xs text-slate-400 mt-3">Optional: add VirusTotal key to supplement subdomains. Passive only.</p>
+        </div>
+      </div>
+
+      <div class="lg:col-span-2">
+        <div class="card">
+          <div class="tab" id="tabs">
+            <button class="active" data-tab="subdomains">Subdomains</button>
+            <button data-tab="dns">DNS Records</button>
+            <button data-tab="ips">IPs & ASN</button>
+            <button data-tab="ports">Ports</button>
+            <button data-tab="tech">Tech Stack</button>
+            <button data-tab="wayback">Wayback</button>
+            <button data-tab="js">Third-Party Assets (JS)</button>
+          </div>
+
+          <div id="results" class="results-area font-mono text-sm">
+            <div id="statusLine" class="text-slate-400 mb-2">Idle</div>
+            <div id="tab-content">
+              <div class="text-slate-500">Run a scan to populate results.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+<script>
+const domainInput = document.getElementById("domain");
+const vtKeyInput = document.getElementById("vtKey");
+const scanBtn = document.getElementById("scanBtn");
+const stopBtn = document.getElementById("stopBtn");
+const exportJson = document.getElementById("exportJson");
+const copyAll = document.getElementById("copyAll");
+const statusLine = document.getElementById("statusLine");
+const tabContent = document.getElementById("tab-content");
+const tabs = document.querySelectorAll("#tabs button");
+
+let controller = null;
+let lastResults = null;
+let currentTab = "subdomains";
+
+function setStatus(text, busy=false) {
+  statusLine.innerHTML = busy ? `<span class="spinner"></span> ${text}` : text;
+}
+
+tabs.forEach(btn => {
+  btn.addEventListener("click", (e) => {
+    tabs.forEach(b => b.classList.remove("active"));
+    e.currentTarget.classList.add("active");
+    currentTab = e.currentTarget.dataset.tab;
+    renderTab();
+  });
+});
+
+function renderTab() {
+  if (!lastResults) {
+    tabContent.innerHTML = `<div class="text-slate-500">No results yet. Run a scan.</div>`;
+    return;
+  }
+  if (currentTab === "subdomains") {
+    const arr = lastResults.subdomains || [];
+    if (!arr.length) tabContent.innerHTML = `<div class="text-slate-400">No subdomains found.</div>`;
+    else {
+      tabContent.innerHTML = `<div class="section-title">Subdomains (${arr.length})</div><div><button class="copy-btn" onclick="copySection('subdomains')">Copy</button><div class="mt-2"></div>${arr.map(s=>`<div class="py-1 border-b border-slate-700"><a class="link" href="http://${s}" target="_blank">${s}</a></div>`).join('')}</div>`;
+    }
+  } else if (currentTab === "dns") {
+    tabContent.innerHTML = `<div class="section-title">DNS Records</div><pre class="whitespace-pre-wrap text-slate-300">${JSON.stringify(lastResults.dns||{}, null, 2)}</pre>`;
+  } else if (currentTab === "ips") {
+    const arr = lastResults.ips || [];
+    const info = lastResults.ip_info || {};
+    if (!arr.length) tabContent.innerHTML = `<div class="text-slate-400">No IPs discovered.</div>`;
+    else {
+      tabContent.innerHTML = `<div class="section-title">IPs & ASN (${arr.length})</div><button class="copy-btn" onclick="copySection('ips')">Copy</button><div class="mt-2"></div>${arr.map(ip=>`<div class="py-1 border-b border-slate-700"><b>${ip}</b> - ${info[ip] ? (info[ip].country||'') + ' / ' + (info[ip].isp||'') : ''}</div>`).join('')}`;
+    }
+  } else if (currentTab === "ports") {
+    const arr = lastResults.open_ports || [];
+    if (!arr.length) tabContent.innerHTML = `<div class="text-slate-400">No open HTTP ports detected via passive probes.</div>`;
+    else tabContent.innerHTML = `<div class="section-title">Open Ports</div>${arr.map(p=>`<div class="py-1 border-b border-slate-700">IP: ${p.ip} Port: ${p.port} Status: ${p.status}</div>`).join('')}`;
+  } else if (currentTab === "tech") {
+    tabContent.innerHTML = `<div class="section-title">Tech Hints</div><pre class="whitespace-pre-wrap text-slate-300">${JSON.stringify(lastResults.tech || {}, null, 2)}</pre>`;
+  } else if (currentTab === "wayback") {
+    const arr = lastResults.wayback_links || [];
+    if (!arr.length) tabContent.innerHTML = `<div class="text-slate-400">No archived links found.</div>`;
+    else tabContent.innerHTML = `<div class="section-title">Wayback Links (${arr.length})</div><button class="copy-btn" onclick="copySection('wayback_links')">Copy</button><div class="mt-2"></div>${arr.map(l=>`<div class="py-1 border-b border-slate-700 break-all"><a class="link" href="${l}" target="_blank">${l}</a></div>`).join('')}`;
+  } else if (currentTab === "js") {
+    const obj = lastResults.js_assets || {};
+    let html = `<div class="section-title">JS / Third-Party Assets</div>`;
+    for (const host in obj) {
+      const arr = obj[host] || [];
+      html += `<div class="py-1 border-b border-slate-700"><b>${host}</b><div class="mt-1">${arr.map(a=>`<div class="py-0.5"><a class="link" href="${a}" target="_blank">${a}</a></div>`).join('')}</div></div>`;
+    }
+    tabContent.innerHTML = html;
+  }
+}
+
+function copySection(key) {
+  if (!lastResults) return;
+  let txt = "";
+  if (key === "subdomains") txt = (lastResults.subdomains||[]).join("\n");
+  if (key === "wayback_links") txt = (lastResults.wayback_links||[]).join("\n");
+  if (key === "ips") txt = (lastResults.ips||[]).join("\n");
+  if (!txt) return;
+  navigator.clipboard.writeText(txt).then(()=> alert("Copied to clipboard"));
+}
+
+copyAll.addEventListener("click", () => {
+  if (!lastResults) return alert("No results to copy");
+  const parts = [];
+  if (lastResults.subdomains && lastResults.subdomains.length) parts.push("SUBDOMAINS:\n"+lastResults.subdomains.join("\n"));
+  if (lastResults.wayback_links && lastResults.wayback_links.length) parts.push("\nWAYBACK:\n"+lastResults.wayback_links.join("\n"));
+  if (lastResults.ips && lastResults.ips.length) parts.push("\nIPS:\n"+lastResults.ips.join("\n"));
+  navigator.clipboard.writeText(parts.join("\n\n")).then(()=> {
+    copyAll.innerText = "Copied!";
+    setTimeout(()=> copyAll.innerText = "Copy All", 1500);
+  });
+});
+
+exportJson.addEventListener("click", () => {
+  if (!lastResults) return alert("No results");
+  const blob = new Blob([JSON.stringify(lastResults, null, 2)], {type:"application/json"});
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = `${(lastResults.domain||'asset')}_discovery.json`;
+  link.click();
+});
+
+scanBtn.addEventListener("click", async () => {
+  const domain = domainInput.value.trim();
+  const vtKey = vtKeyInput.value.trim();
+  if (!domain) return alert("Enter a domain");
+
+  controller = new AbortController();
+  scanBtn.classList.add("hidden");
+  stopBtn.classList.remove("hidden");
+  setStatus(`Scanning ${domain}...`, true);
+  tabContent.innerHTML = "";
+
+  try {
+    const res = await fetch("/api/asset", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({domain, vt_api_key: vtKey}),
+      signal: controller.signal
+    });
+    if (!res.ok) throw new Error(`Server returned ${res.status}`);
+    const j = await res.json();
+    lastResults = j;
+    setStatus(`Scan complete — ${ (j.subdomains||[]).length } subdomains, ${ (j.wayback_links||[]).length } wayback links`, false);
+    renderTab();
+  } catch (err) {
+    if (err.name === 'AbortError') {
+      setStatus("Scan cancelled", false);
+    } else {
+      setStatus(`Error: ${err.message}`, false);
+      tabContent.innerHTML = `<div class="text-red-400">Error: ${err.message}</div>`;
+    }
+  } finally {
+    scanBtn.classList.remove("hidden");
+    stopBtn.classList.add("hidden");
+    controller = null;
+  }
+});
+
+stopBtn.addEventListener("click", () => {
+  if (controller) controller.abort();
+});
+
+// initial
+renderTab();
+setStatus("Idle", false);
+</script>
+</body>
+</html>
